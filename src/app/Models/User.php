@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'work_status',
     ];
 
     /**
@@ -40,5 +42,36 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'role' => 'integer',
+        'work_status' => 'integer',
     ];
+
+    public const ROLE_EMPLOYEE = 0;
+    public const ROLE_ADMIN = 1;
+
+    public const WORK_OFF_DUTY = 0;
+    public const WORK_WORKING = 1;
+    public const WORK_ON_BREAK = 2;
+    public const WORK_LEFT_WORK = 3;
+
+    // 管理者チェック
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function attendanceModifications()
+    {
+        return $this->hasMany(AttendanceModification::class);
+    }
+
+    public function breakTimeModifications()
+    {
+        return $this->hasMany(BreakTimeModification::class);
+    }
 }
