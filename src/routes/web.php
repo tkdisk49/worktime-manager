@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Employee\EmployeeAttendanceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('auth')->group(function () {
+    Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
 });
