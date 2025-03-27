@@ -15,6 +15,7 @@ class BreakTimeModification extends Model
         'new_break_start',
         'new_break_end',
         'approval_status',
+        'approved_by',
     ];
 
     public const APPROVAL_PENDING = 0;
@@ -28,5 +29,10 @@ class BreakTimeModification extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'approved_by');
     }
 }

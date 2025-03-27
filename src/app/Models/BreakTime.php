@@ -22,6 +22,6 @@ class BreakTime extends Model
 
     public function modifications()
     {
-        return $this->hasMany(BreakTimeModification::class);
+        return $this->hasOne(BreakTimeModification::class);
     }
 }

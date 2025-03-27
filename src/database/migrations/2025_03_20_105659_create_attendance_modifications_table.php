@@ -22,6 +22,7 @@ class CreateAttendanceModificationsTable extends Migration
             $table->integer('new_total_work_time')->nullable();
             $table->text('new_remarks')->nullable();
             $table->tinyInteger('approval_status')->default(0)->comment('0:申請中, 1:承認済');
+            $table->foreignId('approved_by')->nullable()->constrained('admins')->nullOnDelete();
             $table->timestamps();
         });
     }

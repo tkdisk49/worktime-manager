@@ -17,6 +17,7 @@ class AttendanceModification extends Model
         'new_total_work_time',
         'new_remarks',
         'approval_status',
+        'approved_by',
     ];
 
     public const APPROVAL_PENDING = 0;
@@ -30,5 +31,10 @@ class AttendanceModification extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'approved_by');
     }
 }

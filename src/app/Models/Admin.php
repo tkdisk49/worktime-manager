@@ -43,4 +43,14 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function attendanceModifications()
+    {
+        return $this->hasMany(AttendanceModification::class, 'approved_by');
+    }
+
+    public function breakTimeModifications()
+    {
+        return $this->hasMany(BreakTimeModification::class, 'approved_by');
+    }
 }
