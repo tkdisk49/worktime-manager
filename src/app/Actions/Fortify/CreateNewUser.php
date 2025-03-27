@@ -27,7 +27,6 @@ class CreateNewUser implements CreatesNewUsers
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => User::ROLE_EMPLOYEE,
         ]);
     }
 }

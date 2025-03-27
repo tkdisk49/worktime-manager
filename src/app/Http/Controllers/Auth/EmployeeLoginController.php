@@ -19,15 +19,11 @@ class EmployeeLoginController extends AuthenticatedSessionController
 
     public function store(FortifyLoginRequest $request)
     {
-        if (Auth::attempt($request->only('email', 'password'))) {
-            if (Auth::user()->isAdmin()) {
-                Auth::logout();
-                throw ValidationException::withMessages([
-                    'email' => ['ログイン情報が登録されていません。']
-                ]);
-            }
+        $credentials = $request->only('email', 'password');
 
-            return redirect()->route('attendance.create');
+        if (Auth::guard('web')->attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/attendance');
         }
 
         throw ValidationException::withMessages([
@@ -37,7 +33,7 @@ class EmployeeLoginController extends AuthenticatedSessionController
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
 
         if ($request->hasSession()) {
             $request->session()->invalidate();

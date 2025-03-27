@@ -17,7 +17,7 @@ class AttendancesTableSeeder extends Seeder
      */
     public function run()
     {
-        $users = User::where('role', User::ROLE_EMPLOYEE)->get();
+        $users = User::all();
         $today = Carbon::today();
         $startDate = $today->copy()->subMonth(2)->startOfMonth();
 

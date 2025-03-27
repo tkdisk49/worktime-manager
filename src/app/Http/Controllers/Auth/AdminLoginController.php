@@ -20,25 +20,21 @@ class AdminLoginController extends AuthenticatedSessionController
 
     public function store(FortifyLoginRequest $request)
     {
-        if (Auth::attempt($request->only('email', 'password'))) {
-            if (!Auth::user()->isAdmin()) {
-                Auth::logout();
-                throw ValidationException::withMessages([
-                    'email' => ['ログイン情報が登録されていません']
-                ]);
-            }
+        $credentials = $request->only('email', 'password');
 
-            return redirect()->route('admin.attendance.list');
+        if (Auth::guard('admin')->attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('admin/attendance/list');
         }
 
         throw ValidationException::withMessages([
-            'email' => ['ログイン情報が登録されていません。'],
+            'email' => ['ログイン情報が登録されていません'],
         ]);
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         if ($request->hasSession()) {
             $request->session()->invalidate();
