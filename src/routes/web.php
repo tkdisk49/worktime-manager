@@ -32,11 +32,11 @@ Route::prefix('admin')->group(function () {
 
 // 一般ユーザー用ルート
 Route::middleware('guest:web')->group(function () {
-    Route::get('/login', [EmployeeLoginController::class, 'show'])->name('login');
+    Route::get('/login', [EmployeeLoginController::class, 'create'])->name('login');
     Route::post('/login', [EmployeeLoginController::class, 'store']);
 });
 
 Route::middleware('auth:web')->group(function () {
     Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
-    Route::post('/logout', [EmployeeLoginController::class, 'logout'])->name('logout');
+    Route::post('/logout', [EmployeeLoginController::class, 'destroy'])->name('logout');
 });
