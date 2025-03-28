@@ -2,39 +2,81 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Actions\Admin\AttemptToAuthenticate;
+use App\Responses\AdminLoginResponse;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
-use Laravel\Fortify\Contracts\LogoutResponse;
-use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
-use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
+use Illuminate\Routing\Controller;
+use Illuminate\Routing\Pipeline;
+use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Http\Requests\LoginRequest;
 
-class AdminLoginController extends AuthenticatedSessionController
+class AdminLoginController extends Controller
 {
-    public function show()
+    /**
+     * The guard implementation.
+     *
+     * @var \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected $guard;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
+     * @return void
+     */
+    public function __construct(StatefulGuard $guard)
     {
-        return view('admin.auth.login');
+        $this->guard = $guard;
     }
 
-    public function store(FortifyLoginRequest $request)
+    /**
+     * Show the login view.
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function create()
     {
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('admin/attendance/list');
-        }
-
-        throw ValidationException::withMessages([
-            'email' => ['ログイン情報が登録されていません'],
-        ]);
+        return view('admin.auth.login', ['guard' => 'admin']);
     }
 
-    public function logout(Request $request)
+    /**
+     * Attempt to authenticate a new session.
+     *
+     * @param  \Laravel\Fortify\Http\Requests\LoginRequest   $request
+     * @return mixed
+     */
+    public function store(LoginRequest $request)
     {
-        Auth::guard('admin')->logout();
+        return $this->loginPipeline($request)->then(function ($request) {
+            return app(AdminLoginResponse::class);
+        });
+    }
+
+    /**
+     * Get the authentication pipeline instance.
+     *
+     * @param  \Laravel\Fortify\Http\Requests\LoginRequest  $request
+     * @return \Illuminate\Pipeline\Pipeline
+     */
+    protected function loginPipeline(LoginRequest $request)
+    {
+        return (new Pipeline(app()))->send($request)->through(array_filter([
+            AttemptToAuthenticate::class,
+            PrepareAuthenticatedSession::class,
+        ]));
+    }
+
+    /**
+     * Destroy an authenticated session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Request $request)
+    {
+        $this->guard->logout();
 
         if ($request->hasSession()) {
             $request->session()->invalidate();

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Auth\AdminLoginController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\EmployeeAttendanceController;
 use Illuminate\Support\Facades\Route;
@@ -21,13 +20,13 @@ use Illuminate\Support\Facades\Route;
 // 管理者用ルート
 Route::prefix('admin')->group(function () {
     Route::middleware('guest:admin')->group(function () {
-        Route::get('/login', [AdminLoginController::class, 'show'])->name('admin.login');
+        Route::get('/login', [AdminLoginController::class, 'create'])->name('admin.login');
         Route::post('/login', [AdminLoginController::class, 'store']);
     });
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.list');
-        Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+        Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
     });
 });
 
