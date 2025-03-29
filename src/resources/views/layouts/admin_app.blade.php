@@ -46,9 +46,9 @@
         @endauth
     </header>
 
-    <main>
+    <div class="content">
         @yield('content')
-    </main>
+    </div>
 </body>
 
 </html>
