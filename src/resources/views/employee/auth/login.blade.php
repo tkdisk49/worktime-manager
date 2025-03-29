@@ -1,5 +1,15 @@
 {{-- ログイン画面（一般ユーザー） --}}
+@extends('layouts/app')
 
+@section('title')
+ログイン
+@endsection
+
+@section('css')
+
+@endsection
+
+@section('content')
 <form method="POST" action="{{ url('/login') }}">
     @csrf
 
@@ -17,3 +27,4 @@
 
     <button type="submit">ログイン</button>
 </form>
+@endsection
