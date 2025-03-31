@@ -17,8 +17,8 @@ class CreateBreakTimeModificationsTable extends Migration
             $table->id();
             $table->foreignId('break_time_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->dateTime('new_break_start')->nullable();
-            $table->dateTime('new_break_end')->nullable();
+            $table->time('new_break_start')->nullable();
+            $table->time('new_break_end')->nullable();
             $table->tinyInteger('approval_status')->default(0)->comment('0:申請中, 1:承認済');
             $table->foreignId('approved_by')->nullable()->constrained('admins')->nullOnDelete();
             $table->timestamps();

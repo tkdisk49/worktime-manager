@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -48,7 +49,7 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
-        $now = now();
+        $now = Carbon::today()->subMonth(2)->startOfMonth();
 
         $addTimestamps = function ($user) use ($now) {
             return array_merge($user, [

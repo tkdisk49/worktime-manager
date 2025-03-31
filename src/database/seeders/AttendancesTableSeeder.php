@@ -24,7 +24,7 @@ class AttendancesTableSeeder extends Seeder
         foreach ($users as $user) {
             $date = $startDate->copy();
 
-            while ($date <= $today) {
+            while ($date < $today) {
                 if (!in_array($date->dayOfWeek, [Carbon::SATURDAY, Carbon::SUNDAY])) {
                     $clockIn = $date->copy()->setTime(9, 0);
                     $clockOut = $date->copy()->setTime(18, 0);

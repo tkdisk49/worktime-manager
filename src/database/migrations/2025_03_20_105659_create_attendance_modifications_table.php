@@ -17,8 +17,8 @@ class CreateAttendanceModificationsTable extends Migration
             $table->id();
             $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->dateTime('new_clock_in')->nullable();
-            $table->dateTime('new_clock_out')->nullable();
+            $table->time('new_clock_in')->nullable();
+            $table->time('new_clock_out')->nullable();
             $table->integer('new_total_work_time')->nullable();
             $table->text('new_remarks')->nullable();
             $table->tinyInteger('approval_status')->default(0)->comment('0:申請中, 1:承認済');
