@@ -6,11 +6,17 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/employee/attendance/create.css') }}">
+<link rel="stylesheet" href="{{ asset('css/employee/attendances/create.css') }}">
 @endsection
 
 @section('content')
 <main class="attendance-main">
+    @if (session('error'))
+    <div class="attendance-main__error">
+        {{ session('error') }}
+    </div>
+    @endif
+
     <div class="attendance-main__status">
         <span class="attendance-main__status-label">{{ $statusLabel }}</span>
     </div>
@@ -21,7 +27,7 @@
     </div>
 
     @if ($user->isOffDuty())
-    <form action="" method="POST" class="attendance-main__form">
+    <form action="{{ route('attendance.store') }}" method="POST" class="attendance-main__form">
         @csrf
         <button type="submit" class="attendance-main__button">出勤</button>
     </form>
