@@ -19,6 +19,11 @@ class Attendance extends Model
         'remarks',
     ];
 
+    protected $casts = [
+        'total_work_time' => 'integer',
+        'total_break_time' => 'integer',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

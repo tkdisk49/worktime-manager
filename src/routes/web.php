@@ -41,4 +41,5 @@ Route::middleware('auth:web')->group(function () {
 
     Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/attendance', [EmployeeAttendanceController::class, 'store'])->name('attendance.store');
+    Route::post('/attendance/clock-out', [EmployeeAttendanceController::class, 'clockOut'])->name('attendance.clock_out');
 });

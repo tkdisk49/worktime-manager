@@ -53,4 +53,40 @@ class EmployeeAttendanceController extends Controller
 
         return redirect()->back();
     }
+
+    public function clockOut()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $now = Carbon::now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
+
+        $attendance = Attendance::where('user_id', $user->id)
+            ->whereDate('work_date', $today)
+            ->first();
+
+        if (!$attendance) {
+            return redirect()->back()->with('error', '本日の勤怠記録がありません');
+        }
+
+        if (!$user->isWorking()) {
+            return redirect()->back()->with('error', '勤務中ではないため退勤できません');
+        }
+
+        $clockInTime = Carbon::parse($attendance->clock_in);
+        $clockOutTime = Carbon::parse($currentTime);
+        $totalWorkMinutes = $clockInTime->diffInMinutes($clockOutTime);
+
+        DB::transaction(function () use ($user, $currentTime, $attendance, $totalWorkMinutes) {
+            $attendance->update([
+                'clock_out' => $currentTime,
+                'total_work_time' => $totalWorkMinutes,
+            ]);
+
+            $user->update(['work_status' => User::WORK_LEFT_WORK]);
+        });
+
+        return redirect()->back();
+    }
 }

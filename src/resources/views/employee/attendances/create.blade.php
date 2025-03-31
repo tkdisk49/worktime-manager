@@ -34,7 +34,7 @@
 
     @elseif ($user->isWorking())
     <div class="attendance-main__form-group">
-        <form action="" method="POST" class="attendance-main__form">
+        <form action="{{ route('attendance.clock_out') }}" method="POST" class="attendance-main__form">
             @csrf
             <button type="submit" class="attendance-main__button">退勤</button>
         </form>
