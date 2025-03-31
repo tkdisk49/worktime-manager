@@ -37,6 +37,8 @@ Route::middleware('guest:web')->group(function () {
 });
 
 Route::middleware('auth:web')->group(function () {
-    Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/logout', [EmployeeLoginController::class, 'destroy'])->name('logout');
+
+    Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
+    Route::post('/attendance', [EmployeeAttendanceController::class, 'store'])->name('attendance.store');
 });

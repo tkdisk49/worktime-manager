@@ -26,11 +26,11 @@ class Attendance extends Model
 
     public function breakTimes()
     {
-        return $this->hasOne(BreakTime::class);
+        return $this->hasMany(BreakTime::class);
     }
 
     public function modifications()
     {
-        return $this->hasMany(AttendanceModification::class);
+        return $this->hasOne(AttendanceModification::class);
     }
 }

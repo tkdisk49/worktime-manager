@@ -1,0 +1,81 @@
+.attendance-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px);
+    background-color: #f0eff2;
+}
+
+.attendance-main__status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 6px 18px;
+    border-radius: 50px;
+    background-color: #c8c8c8;
+}
+
+.attendance-main__status-label {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    color: #696969;
+}
+
+.attendance-main__date-time {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.attendance-main__date {
+    font-size: 40px;
+    margin: 0;
+    color: #000;
+}
+
+.attendance-main__time {
+    font-size: 80px;
+    font-weight: bold;
+    margin: 5px 0;
+    color: #000;
+}
+
+.attendance-main__form,
+.attendance-main__message {
+    margin-top: 20px;
+}
+
+.attendance-main__form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 70px;
+}
+
+.attendance-main__button {
+    width: 220px;
+    background-color: #000;
+    color: #fff;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+}
+
+.attendance-main__button--white {
+    background-color: #fff;
+    color: #000;
+}
+
+.attendance-main__message p {
+    font-size: 26px;
+    font-weight: bold;
+    color: #000;
+    letter-spacing: 0.15em;
+}

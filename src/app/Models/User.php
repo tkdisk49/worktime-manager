@@ -63,4 +63,35 @@ class User extends Authenticatable
     {
         return $this->hasMany(BreakTimeModification::class);
     }
+
+    public function isOffDuty()
+    {
+        return $this->work_status === self::WORK_OFF_DUTY;
+    }
+
+    public function isWorking()
+    {
+        return $this->work_status === self::WORK_WORKING;
+    }
+
+    public function isOnBreak()
+    {
+        return $this->work_status === self::WORK_ON_BREAK;
+    }
+
+    public function hasLeftWork()
+    {
+        return $this->work_status === self::WORK_LEFT_WORK;
+    }
+
+    public static function getWorkStatusLabel($status)
+    {
+        return match ($status) {
+            self::WORK_OFF_DUTY => '勤務外',
+            self::WORK_WORKING => '出勤中',
+            self::WORK_ON_BREAK => '休憩中',
+            self::WORK_LEFT_WORK => '退勤済',
+            default => '不明',
+        };
+    }
 }

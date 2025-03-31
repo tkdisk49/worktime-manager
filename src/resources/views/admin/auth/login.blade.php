@@ -1,4 +1,15 @@
 {{-- ログイン画面（管理者） --}}
+@extends('layouts/admin_app')
+
+@section('title')
+管理者ログイン
+@endsection
+
+@section('css')
+
+@endsection
+
+@section('content')
 <h1>管理者ログイン画面</h1>
 
 <form method="POST" action="{{ url('/admin/login') }}">
@@ -18,3 +29,4 @@
 
     <button type="submit">ログイン</button>
 </form>
+@endsection
