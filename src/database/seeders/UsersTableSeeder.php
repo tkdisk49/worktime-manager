@@ -18,6 +18,11 @@ class UsersTableSeeder extends Seeder
     {
         $users = [
             [
+                'name' => 'テストユーザー',
+                'email' => 'user@example.com',
+                'password' => bcrypt('password'),
+            ],
+            [
                 'name' => '西 伶奈',
                 'email' => 'reina.n@coachtech.com',
                 'password' => bcrypt('password'),
