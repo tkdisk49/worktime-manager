@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\EmployeeAttendanceController;
+use App\Http\Middleware\CheckAttendanceStatus;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,14 +20,6 @@ use Illuminate\Support\Facades\Route;
 
 // 管理者用ルート
 Route::prefix('admin')->group(function () {
-    Route::get('/', function () {
-        if (Route::middleware('auth:admin')) {
-            return redirect()->route('admin.attendance.list');
-        } else {
-            return redirect()->route('admin.login');
-        }
-    });
-
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminLoginController::class, 'create'])->name('admin.login');
         Route::post('/login', [AdminLoginController::class, 'store']);
@@ -40,23 +33,22 @@ Route::prefix('admin')->group(function () {
 });
 
 // 一般ユーザー用ルート
-Route::get('/', function () {
-    if (Route::middleware('auth:web')) {
-        return redirect()->route('attendance.create');
-    } else {
-        return redirect()->route('login');
-    }
-});
-
 Route::middleware('guest:web')->group(function () {
     Route::get('/login', [EmployeeLoginController::class, 'create'])->name('login');
     Route::post('/login', [EmployeeLoginController::class, 'store']);
 });
 
+// 勤怠登録画面表示時にwork_statusチェックを実施
+Route::middleware(['auth:web', CheckAttendanceStatus::class])->group(function () {
+    Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
+});
+
 Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [EmployeeLoginController::class, 'destroy'])->name('logout');
 
-    Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
-    Route::post('/attendance', [EmployeeAttendanceController::class, 'store'])->name('attendance.store');
-    Route::patch('/attendance/clock-out', [EmployeeAttendanceController::class, 'clockOut'])->name('attendance.clock_out');
+    Route::post('/attendance', [EmployeeAttendanceController::class, 'recordWorkStart'])->name('attendance.work_start');
+    Route::patch('/attendance', [EmployeeAttendanceController::class, 'recordWorkEnd'])->name('attendance.work_end');
+
+    Route::post('/attendance/break', [EmployeeAttendanceController::class, 'recordBreakStart'])->name('attendance.break_start');
+    Route::patch('/attendance/break', [EmployeeAttendanceController::class, 'recordBreakEnd'])->name('attendance.break_end');
 });
