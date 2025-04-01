@@ -36,6 +36,7 @@
     <div class="attendance-main__form-group">
         <form action="{{ route('attendance.clock_out') }}" method="POST" class="attendance-main__form">
             @csrf
+            @method('PATCH')
             <button type="submit" class="attendance-main__button">退勤</button>
         </form>
         <form action="" method="POST" class="attendance-main__form">
