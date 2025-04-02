@@ -13,6 +13,29 @@ use Illuminate\Support\Facades\DB;
 
 class EmployeeAttendanceController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $now = Carbon::now()->startOfMonth();
+        $monthParam = $request->input('month');
+
+        // 意図しない月に変換されないよう日付を月初で固定
+        $currentDate = $monthParam
+            ? Carbon::parse($monthParam . '-01')
+            : $now;
+
+        $startOfMonth = $currentDate->copy()->startOfMonth();
+        $endOfMonth = $currentDate->copy()->endOfMonth();
+
+        $attendances = Attendance::with('breakTimes')
+            ->where('user_id', $user->id)
+            ->whereBetween('work_date', [$startOfMonth, $endOfMonth])
+            ->orderBy('work_date')
+            ->get();
+
+        return view('employee.attendances.index', compact('attendances', 'currentDate'));
+    }
+
     public function create()
     {
         $now = Carbon::now();

@@ -19,7 +19,7 @@
 <body>
     <header class="header">
         <div class="header__logo">
-            <a href="/" class="header__logo-link">
+            <a href="/admin/login" class="header__logo-link">
                 <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH" class="header__logo-img">
             </a>
         </div>

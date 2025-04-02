@@ -46,6 +46,8 @@ Route::middleware(['auth:web', CheckAttendanceStatus::class])->group(function ()
 Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [EmployeeLoginController::class, 'destroy'])->name('logout');
 
+    Route::get('/attendance/list', [EmployeeAttendanceController::class, 'index'])->name('attendance.index');
+
     Route::post('/attendance', [EmployeeAttendanceController::class, 'recordWorkStart'])->name('attendance.work_start');
     Route::patch('/attendance', [EmployeeAttendanceController::class, 'recordWorkEnd'])->name('attendance.work_end');
 
