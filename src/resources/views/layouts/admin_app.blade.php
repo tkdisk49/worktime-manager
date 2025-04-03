@@ -24,25 +24,25 @@
             </a>
         </div>
         @auth
-        <nav class="header__nav">
-            <ul class="header__nav-list">
-                <li class="header__nav-item">
-                    <a href="/admin/attendance/list" class="header__nav-link">勤怠一覧</a>
-                </li>
-                <li class="header__nav-item">
-                    <a href="/admin/staff/list" class="header__nav-link">スタッフ一覧</a>
-                </li>
-                <li class="header__nav-item">
-                    <a href="/stamp_correction_request/list" class="header__nav-link">申請一覧</a>
-                </li>
-                <li class="header__nav-item">
-                    <form action="{{ route('admin.logout') }}" method="POST" class="logout-form">
-                        @csrf
-                        <button type="submit" class="header__nav-link logout-form__link">ログアウト</button>
-                    </form>
-                </li>
-            </ul>
-        </nav>
+            <nav class="header__nav">
+                <ul class="header__nav-list">
+                    <li class="header__nav-item">
+                        <a href="/admin/attendance/list" class="header__nav-link">勤怠一覧</a>
+                    </li>
+                    <li class="header__nav-item">
+                        <a href="/admin/staff/list" class="header__nav-link">スタッフ一覧</a>
+                    </li>
+                    <li class="header__nav-item">
+                        <a href="/stamp_correction_request/list" class="header__nav-link">申請一覧</a>
+                    </li>
+                    <li class="header__nav-item">
+                        <form action="{{ route('admin.logout') }}" method="POST" class="logout-form">
+                            @csrf
+                            <button type="submit" class="header__nav-link logout-form__link">ログアウト</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
         @endauth
     </header>
 
