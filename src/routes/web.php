@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\EmployeeAttendanceController;
+use App\Http\Controllers\Employee\EmployeeAttendanceModificationController;
 use App\Http\Middleware\CheckAttendanceStatus;
 use Illuminate\Support\Facades\Route;
 
@@ -53,4 +54,7 @@ Route::middleware('auth:web')->group(function () {
 
     Route::post('/attendance/break', [EmployeeAttendanceController::class, 'recordBreakStart'])->name('attendance.break_start');
     Route::patch('/attendance/break', [EmployeeAttendanceController::class, 'recordBreakEnd'])->name('attendance.break_end');
+
+    Route::get('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'show'])->name('attendance.modification.show');
+    Route::post('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'store'])->name('attendance.modification.store');
 });

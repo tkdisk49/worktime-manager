@@ -71,7 +71,7 @@
                                     : '' }}
                             </td>
                             <td class="attendance-index__td">
-                                <a href="#" class="attendance-index__detail-link">詳細</a>
+                                <a href="{{ route('attendance.modification.show', ['id' => $attendance->id]) }}" class="attendance-index__detail-link">詳細</a>
                             </td>
                         </tr>
                     @empty

@@ -11,6 +11,7 @@ class BreakTimeModification extends Model
 
     protected $fillable = [
         'break_time_id',
+        'attendance_id',
         'user_id',
         'new_break_start',
         'new_break_end',
@@ -24,6 +25,11 @@ class BreakTimeModification extends Model
     public function breakTime()
     {
         return $this->belongsTo(BreakTime::class);
+    }
+
+    public function attendance()
+    {
+        return $this->belongsTo(Attendance::class);
     }
 
     public function user()
