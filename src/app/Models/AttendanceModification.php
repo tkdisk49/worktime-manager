@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,5 +37,15 @@ class AttendanceModification extends Model
     public function admin()
     {
         return $this->belongsTo(Admin::class, 'approved_by');
+    }
+
+    public function getFormattedNewClockInAttribute()
+    {
+        return Carbon::parse($this->new_clock_in)->format('H:i');
+    }
+
+    public function getFormattedNewClockOutAttribute()
+    {
+        return Carbon::parse($this->new_clock_out)->format('H:i');
     }
 }

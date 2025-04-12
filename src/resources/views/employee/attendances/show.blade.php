@@ -16,44 +16,69 @@
         {{-- 申請済みビュー --}}
         @if ($hasPendingRequest)
             <form class="attendance-show__form">
-                <table class="attendance-show__table">
-                    <tr>
-                        <th>名前</th>
-                        <td>{{ Auth::user()->name }}</td>
-                    </tr>
-                    <tr>
-                        <th>日付</th>
-                        <td>{{ $formattedDate }}</td>
-                    </tr>
-                    <tr>
-                        <th>出勤・退勤</th>
-                        <td>
-                            <input type="time" value="{{ $attendance->modification->new_clock_in }}" disabled>
-                            〜
-                            <input type="time" value="{{ $attendance->modification->new_clock_out }}" disabled>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>休憩</th>
-                        <td>
-                            @foreach ($attendance->breakTimeModifications as $mod)
-                                <div class="attendance-show__break-row">
-                                    <input type="time" value="{{ $mod->new_break_start }}" disabled>
-                                    〜
-                                    <input type="time" value="{{ $mod->new_break_end }}" disabled>
+                <div class="attendance-show__table-wrapper">
+                    <table class="attendance-show__table">
+                        <tr class="attendance-show__tr">
+                            <th>名前</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <p>{{ Auth::user()->name }}</p>
+                                    </div>
                                 </div>
-                            @endforeach
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>備考</th>
-                        <td>
-                            <textarea class="attendance-show__new-remarks" disabled>{{ $attendance->modification->new_remarks }}</textarea>
-                        </td>
-                    </tr>
-                </table>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>日付</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <p>{{ $formattedYear }}</p>
+                                        <p>{{ $formattedMonthDay }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>出勤・退勤</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <p>{{ $attendance->modification->formatted_new_clock_in }}</p>
+                                        <p>〜</p>
+                                        <p>{{ $attendance->modification->formatted_new_clock_out }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>休憩</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    @foreach ($attendance->breakTimeModifications as $mod)
+                                        <div class="attendance-show__td-content">
+                                            <p>{{ $mod->formatted_new_break_start }}</p>
+                                            <p>〜</p>
+                                            <p>{{ $mod->formatted_new_break_end }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>備考</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <p>{{ $attendance->modification->new_remarks }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
-                <p class="attendance-show__notice">* 承認待ちのため修正はできません。</p>
+                <p class="attendance-show__notice">*承認待ちのため修正はできません。</p>
             </form>
 
             {{-- 新規申請ビュー --}}
@@ -61,63 +86,92 @@
             <form action="{{ route('attendance.modification.store', ['id' => $attendance->id]) }}" method="POST"
                 class="attendance-show__form">
                 @csrf
-                <table class="attendance-show__table">
-                    <tr>
-                        <th>名前</th>
-                        <td>{{ Auth::user()->name }}</td>
-                    </tr>
-                    <tr>
-                        <th>日付</th>
-                        <td>{{ $formattedDate }}</td>
-                    </tr>
-                    <tr>
-                        <th>出勤・退勤</th>
-                        <td>
-                            <input type="time" name="new_clock_in" value="{{ $attendance->formatted_clock_in }}">
-                            〜
-                            <input type="time" name="new_clock_out" value="{{ $attendance->formatted_clock_out }}">
-                            @error('new_clock_in')
-                                <div class="attendance-show__error">{{ $message }}</div>
-                            @enderror
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>休憩</th>
-                        <td>
-                            @foreach ($attendance->breakTimes as $index => $break)
-                                <div class="attendance-show__break-row">
-                                    <input type="hidden" name="existing_breaks[{{ $index }}][id]"
-                                        value="{{ $break->id }}">
-                                    <input type="time" name="existing_breaks[{{ $index }}][start]"
-                                        value="{{ $break->formatted_break_start }}">
-                                    〜
-                                    <input type="time" name="existing_breaks[{{ $index }}][end]"
-                                        value="{{ $break->formatted_break_end }}">
-                                    @error("existing_breaks.$index.start")
+                <div class="attendance-show__table-wrapper">
+                    <table class="attendance-show__table">
+                        <tr class="attendance-show__tr">
+                            <th>名前</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <p>{{ Auth::user()->name }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>日付</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <p>{{ $formattedYear }}</p>
+                                        <p>{{ $formattedMonthDay }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>出勤・退勤</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <input type="time" name="new_clock_in"
+                                            value="{{ $attendance->formatted_clock_in }}" class="attendance-show__input">
+                                        <p>〜</p>
+                                        <input type="time" name="new_clock_out"
+                                            value="{{ $attendance->formatted_clock_out }}" class="attendance-show__input">
+                                    </div>
+                                    @error('new_clock_in')
                                         <div class="attendance-show__error">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            @endforeach
-                            <div class="attendance-show__break-row">
-                                <input type="time" name="new_break_start" value="{{ old('new_break_start') }}">
-                                〜
-                                <input type="time" name="new_break_end" value="{{ old('new_break_end') }}">
-                                @error('new_break_start')
-                                    <div class="attendance-show__error">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>備考</th>
-                        <td>
-                            <textarea name="new_remarks" class="attendance-show__new-remarks">{{ old('new_remarks') }}</textarea>
-                            @error('new_remarks')
-                                <div class="attendance-show__error">{{ $message }}</div>
-                            @enderror
-                        </td>
-                    </tr>
-                </table>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>休憩</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    @foreach ($attendance->breakTimes as $index => $break)
+                                        <div class="attendance-show__td-content">
+                                            <input type="hidden" name="existing_breaks[{{ $index }}][id]"
+                                                value="{{ $break->id }}">
+                                            <input type="time" name="existing_breaks[{{ $index }}][start]"
+                                                value="{{ $break->formatted_break_start }}" class="attendance-show__input">
+                                            <p>〜</p>
+                                            <input type="time" name="existing_breaks[{{ $index }}][end]"
+                                                value="{{ $break->formatted_break_end }}" class="attendance-show__input">
+                                        </div>
+                                        @error("existing_breaks.$index.start")
+                                            <div class="attendance-show__error">{{ $message }}</div>
+                                        @enderror
+                                    @endforeach
+                                    <div class="attendance-show__td-content">
+                                        <input type="time" name="new_break_start" value="{{ old('new_break_start') }}"
+                                            class="attendance-show__input">
+                                        <p>〜</p>
+                                        <input type="time" name="new_break_end" value="{{ old('new_break_end') }}"
+                                            class="attendance-show__input">
+                                    </div>
+                                    @error('new_break_start')
+                                        <div class="attendance-show__error">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="attendance-show__tr">
+                            <th>備考</th>
+                            <td>
+                                <div class="attendance-show__td-container">
+                                    <div class="attendance-show__td-content">
+                                        <textarea name="new_remarks" class="attendance-show__new-remarks">{{ old('new_remarks') }}</textarea>
+                                    </div>
+                                    @error('new_remarks')
+                                        <div class="attendance-show__error">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
                 <div class="attendance-show__form-submit">
                     <button type="submit" class="attendance-show__form-button">修正</button>

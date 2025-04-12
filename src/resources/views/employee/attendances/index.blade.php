@@ -52,13 +52,13 @@
                     @forelse ($attendances as $attendance)
                         <tr class="attendance-index__tr">
                             <td class="attendance-index__td">
-                                {{ \Carbon\Carbon::parse($attendance->work_date)->isoFormat('MM/DD(ddd)') }}
+                                {{ $attendance->formatted_work_date }}
                             </td>
                             <td class="attendance-index__td">
-                                {{ $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '' }}
+                                {{ $attendance->clock_in ? $attendance->formatted_clock_in : '' }}
                             </td>
                             <td class="attendance-index__td">
-                                {{ $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '' }}
+                                {{ $attendance->clock_out ? $attendance->formatted_clock_out : '' }}
                             </td>
                             <td class="attendance-index__td">
                                 {{ isset($attendance->total_break_time)
@@ -71,7 +71,8 @@
                                     : '' }}
                             </td>
                             <td class="attendance-index__td">
-                                <a href="{{ route('attendance.modification.show', ['id' => $attendance->id]) }}" class="attendance-index__detail-link">詳細</a>
+                                <a href="{{ route('attendance.modification.show', ['id' => $attendance->id]) }}"
+                                    class="attendance-index__detail-link">詳細</a>
                             </td>
                         </tr>
                     @empty

@@ -45,6 +45,11 @@ class Attendance extends Model
         return $this->hasMany(BreakTimeModification::class);
     }
 
+    public function getFormattedWorkDateAttribute()
+    {
+        return Carbon::parse($this->work_date)->isoFormat('MM/DD(ddd)');
+    }
+
     public function getFormattedClockInAttribute()
     {
         return Carbon::parse($this->clock_in)->format('H:i');

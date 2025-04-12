@@ -30,10 +30,16 @@ class EmployeeAttendanceModificationController extends Controller
             ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
             ->exists();
 
-        $formattedDate = Carbon::parse($attendance->work_date)
-            ->isoFormat('YYYY年 M月D日');
+        $workDate = Carbon::parse($attendance->work_date);
+        $formattedYear = $workDate->isoFormat('YYYY年');
+        $formattedMonthDay = $workDate->isoFormat('M月D日');
 
-        return view('employee.attendances.show', compact('attendance', 'hasPendingRequest', 'formattedDate'));
+        return view('employee.attendances.show', compact(
+            'attendance',
+            'hasPendingRequest',
+            'formattedYear',
+            'formattedMonthDay',
+        ));
     }
 
     public function store(AttendanceModificationRequest $request, $id)
@@ -56,7 +62,14 @@ class EmployeeAttendanceModificationController extends Controller
             $newTotalWorkMinutes = $start->diffInMinutes($end);
         }
 
-        DB::transaction(function () use ($request, $user, $attendance, $newClockIn, $newClockOut, $newTotalWorkMinutes) {
+        DB::transaction(function () use (
+            $request,
+            $user,
+            $attendance,
+            $newClockIn,
+            $newClockOut,
+            $newTotalWorkMinutes,
+        ) {
             AttendanceModification::create([
                 'attendance_id' => $attendance->id,
                 'user_id' => $user->id,
