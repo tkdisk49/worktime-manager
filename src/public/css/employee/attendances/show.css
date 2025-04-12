@@ -1,0 +1,124 @@
+/* 勤怠詳細画面のcss */
+.attendance-show {
+    max-width: 930px;
+    margin: 0 auto;
+    padding: 40px 15px;
+}
+
+.attendance-show__title {
+    font-size: 30px;
+    font-weight: bold;
+    padding-left: 20px;
+    margin-bottom: 50px;
+    border-left: 8px solid #000;
+}
+
+.attendance-show__table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+}
+
+.attendance-show__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+}
+
+.attendance-show__tr {
+    text-align: left;
+    border-bottom: 2px solid #e1e1e1;
+}
+
+.attendance-show__tr:last-of-type {
+    border: none;
+}
+
+.attendance-show__tr th {
+    width: 40%;
+    padding: 30px 10px 30px 60px;
+    color: #737373;
+}
+
+.attendance-show__tr td {
+    width: 60%;
+    padding: 5px 60px 5px 10px;
+}
+
+.attendance-show__td-container {
+    width: 70%;
+}
+
+.attendance-show__td-content {
+    width: 100%;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.attendance-show__td-content p {
+    margin: 0;
+    padding: 0 16px;
+}
+
+.attendance-show__input {
+    width: 100px;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+}
+
+.attendance-show__input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.attendance-show__new-remarks {
+    width: 100%;
+    height: 70px;
+    padding: 4px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    resize: none;
+}
+
+.attendance-show__notice {
+    text-align: right;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: #ff0000;
+    opacity: 0.5;
+}
+
+.attendance-show__form-submit {
+    margin-top: 50px;
+    text-align: right;
+}
+
+.attendance-show__form-button {
+    width: 130px;
+    height: 50px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+}
+
+.attendance-show__error {
+    color: #ff0000;
+}

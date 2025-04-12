@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,8 +35,28 @@ class Attendance extends Model
         return $this->hasMany(BreakTime::class);
     }
 
-    public function modifications()
+    public function modification()
     {
         return $this->hasOne(AttendanceModification::class);
+    }
+
+    public function breakTimeModifications()
+    {
+        return $this->hasMany(BreakTimeModification::class);
+    }
+
+    public function getFormattedWorkDateAttribute()
+    {
+        return Carbon::parse($this->work_date)->isoFormat('MM/DD(ddd)');
+    }
+
+    public function getFormattedClockInAttribute()
+    {
+        return Carbon::parse($this->clock_in)->format('H:i');
+    }
+
+    public function getFormattedClockOutAttribute()
+    {
+        return Carbon::parse($this->clock_out)->format('H:i');
     }
 }

@@ -24,25 +24,25 @@
             </a>
         </div>
         @auth
-        <nav class="header__nav">
-            <ul class="header__nav-list">
-                <li class="header__nav-item">
-                    <a href="/attendance" class="header__nav-link">勤怠</a>
-                </li>
-                <li class="header__nav-item">
-                    <a href="/attendance/list" class="header__nav-link">勤怠一覧</a>
-                </li>
-                <li class="header__nav-item">
-                    <a href="/stamp_correction_request/list" class="header__nav-link">申請</a>
-                </li>
-                <li class="header__nav-item">
-                    <form action="{{ route('logout') }}" method="POST" class="logout-form">
-                        @csrf
-                        <button type="submit" class="header__nav-link logout-form__link">ログアウト</button>
-                    </form>
-                </li>
-            </ul>
-        </nav>
+            <nav class="header__nav">
+                <ul class="header__nav-list">
+                    <li class="header__nav-item">
+                        <a href="/attendance" class="header__nav-link">勤怠</a>
+                    </li>
+                    <li class="header__nav-item">
+                        <a href="/attendance/list" class="header__nav-link">勤怠一覧</a>
+                    </li>
+                    <li class="header__nav-item">
+                        <a href="/stamp_correction_request/list" class="header__nav-link">申請</a>
+                    </li>
+                    <li class="header__nav-item">
+                        <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                            @csrf
+                            <button type="submit" class="header__nav-link logout-form__link">ログアウト</button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
         @endauth
     </header>
 

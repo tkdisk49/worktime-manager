@@ -5,14 +5,14 @@
     <input type="text" name="name" value="{{ old('name') }}">
     <p>
         @error('name')
-        {{ $message }}
+            {{ $message }}
         @enderror
     </p>
 
     <input type="email" name="email" value="{{ old('email') }}">
     <p>
         @error('email')
-        {{ $message }}
+            {{ $message }}
         @enderror
     </p>
 
@@ -20,7 +20,7 @@
     <input type="password" name="password_confirmation">
     <p>
         @error('password')
-        {{ $message }}
+            {{ $message }}
         @enderror
     </p>
 
