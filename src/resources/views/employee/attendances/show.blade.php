@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-    <main class="attendance-show">
+    <div class="attendance-show">
         <h2 class="attendance-show__title">勤怠詳細</h2>
 
         {{-- 申請済みビュー --}}
@@ -178,5 +178,5 @@
                 </div>
             </form>
         @endif
-    </main>
+    </div>
 @endsection

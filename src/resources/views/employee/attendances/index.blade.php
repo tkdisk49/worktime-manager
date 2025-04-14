@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-    <main class="attendance-index">
+    <div class="attendance-index">
         <h2 class="attendance-index__title">勤怠一覧</h2>
 
         <div class="attendance-index__nav">
@@ -83,5 +83,5 @@
                 </tbody>
             </table>
         </div>
-    </main>
+    </div>
 @endsection
