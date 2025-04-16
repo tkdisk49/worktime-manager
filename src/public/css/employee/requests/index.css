@@ -1,1 +1,92 @@
 /* 申請一覧画面(一般ユーザー) */
+.request-index {
+    max-width: 930px;
+    margin: 0 auto;
+    padding: 40px 15px;
+}
+
+.request-index__title {
+    font-size: 30px;
+    font-weight: bold;
+    padding-left: 20px;
+    margin-bottom: 40px;
+    border-left: 8px solid #000;
+}
+
+.request-index__nav {
+    list-style: none;
+    margin-bottom: 50px;
+    padding: 0;
+    display: flex;
+    border-bottom: 1px solid #000;
+}
+
+.request-index__tab {
+    margin: 8px 50px;
+}
+
+.request-index__tab a {
+    padding: 8px 10px;
+    display: block;
+    text-decoration: none;
+    font-size: 16px;
+    color: #000;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+}
+
+.request-index__tab--active a,
+.request-index__tab a:hover {
+    font-weight: bold;
+}
+
+.request-index__table-wrapper {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    /* overflow: hidden; */
+}
+
+.request-index__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    font-weight: bold;
+    color: #737373;
+    letter-spacing: 0.15em;
+}
+
+.request-index__table th {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 3px solid #e1e1e1;
+}
+
+.request-index__table td {
+    padding: 12px;
+    text-align: left;
+    border-top: 2px solid #e1e1e1;
+}
+
+.request-index__table th:first-of-type,
+.request-index__table td:first-of-type {
+    text-align: center;
+    padding-left: 30px;
+}
+
+.request-index__table th:last-of-type,
+.request-index__table td:last-of-type {
+    padding-right: 30px;
+}
+
+.request-index__table td:nth-of-type(3),
+.request-index__table td:nth-of-type(5) {
+    letter-spacing: normal;
+}
+
+.request-index__detail-link {
+    color: #000;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}

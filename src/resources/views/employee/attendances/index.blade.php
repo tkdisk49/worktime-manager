@@ -77,7 +77,7 @@
                         </tr>
                     @empty
                         <tr class="attendance-index__tr">
-                            <td colspan="6" class="attendance-index__td attendance-index__id--empty">勤怠データがありません</td>
+                            <td colspan="6" class="attendance-index__td attendance-index__id--empty">勤怠記録がありません</td>
                         </tr>
                     @endforelse
                 </tbody>

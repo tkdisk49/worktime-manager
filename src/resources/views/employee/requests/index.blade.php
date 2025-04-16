@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
                     @if (request('status', 'pending') === 'pending')
-                        @foreach ($pendingRequests as $requestItem)
+                        @forelse ($pendingRequests as $requestItem)
                             <tr>
                                 <td>承認待ち</td>
                                 <td>{{ $requestItem->user->name }}</td>
@@ -49,9 +49,13 @@
                                         class="request-index__detail-link">詳細</a>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6">申請中の勤怠記録はありません</td>
+                            </tr>
+                        @endforelse
                     @elseif (request('status') === 'approved')
-                        @foreach ($approvedRequests as $requestItem)
+                        @forelse ($approvedRequests as $requestItem)
                             <tr>
                                 <td>承認済み</td>
                                 <td>{{ $requestItem->user->name }}</td>
@@ -63,7 +67,11 @@
                                         class="request-index__detail-link">詳細</a>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6">承認済みの勤怠申請はありません</td>
+                            </tr>
+                        @endforelse
                     @endif
                 </tbody>
             </table>
