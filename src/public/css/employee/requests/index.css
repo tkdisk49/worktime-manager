@@ -1,4 +1,3 @@
-/* 申請一覧画面(一般ユーザー) */
 .request-index {
     max-width: 930px;
     margin: 0 auto;
@@ -44,7 +43,6 @@
     width: 100%;
     background-color: #fff;
     border-radius: 10px;
-    /* overflow: hidden; */
 }
 
 .request-index__table {
@@ -56,13 +54,13 @@
     letter-spacing: 0.15em;
 }
 
-.request-index__table th {
+.request-index__thead th {
     padding: 12px;
     text-align: left;
     border-bottom: 3px solid #e1e1e1;
 }
 
-.request-index__table td {
+.request-index__tbody td {
     padding: 12px;
     text-align: left;
     border-top: 2px solid #e1e1e1;
@@ -79,8 +77,8 @@
     padding-right: 30px;
 }
 
-.request-index__table td:nth-of-type(3),
-.request-index__table td:nth-of-type(5) {
+.request-index__tbody td:nth-of-type(3),
+.request-index__tbody td:nth-of-type(5) {
     letter-spacing: normal;
 }
 

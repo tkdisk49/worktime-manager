@@ -25,7 +25,7 @@
 
         <div class="request-index__table-wrapper">
             <table class="request-index__table">
-                <thead>
+                <thead class="request-index__thead">
                     <tr>
                         <th>状態</th>
                         <th>名前</th>
@@ -35,7 +35,7 @@
                         <th>詳細</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="request-index__tbody">
                     @if (request('status', 'pending') === 'pending')
                         @forelse ($pendingRequests as $requestItem)
                             <tr>
