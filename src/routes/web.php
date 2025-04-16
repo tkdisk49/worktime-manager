@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\EmployeeAttendanceController;
 use App\Http\Controllers\Employee\EmployeeAttendanceModificationController;
+use App\Http\Controllers\Employee\EmployeeRequestController;
 use App\Http\Middleware\CheckAttendanceStatus;
 use Illuminate\Support\Facades\Route;
 
@@ -57,4 +58,6 @@ Route::middleware('auth:web')->group(function () {
 
     Route::get('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'show'])->name('attendance.modification.show');
     Route::post('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'store'])->name('attendance.modification.store');
+
+    Route::get('/stamp_correction_request/list', [EmployeeRequestController::class, 'index'])->name('employee.requests.index');
 });
