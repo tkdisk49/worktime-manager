@@ -48,4 +48,14 @@ class AttendanceModification extends Model
     {
         return Carbon::parse($this->new_clock_out)->format('H:i');
     }
+
+    public function getFormattedCreatedAtAttribute()
+    {
+        return Carbon::parse($this->created_at)->format('Y/m/d');
+    }
+
+    public function getFormattedWorkDateAttribute()
+    {
+        return Carbon::parse($this->attendance->work_date)->format('Y/m/d');
+    }
 }

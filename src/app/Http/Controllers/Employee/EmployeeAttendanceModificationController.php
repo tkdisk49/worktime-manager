@@ -99,6 +99,6 @@ class EmployeeAttendanceModificationController extends Controller
             }
         });
 
-        return redirect()->route('attendance.modification.show', ['id' => $attendance->id]);
+        return redirect()->route('attendance.modification.show', ['id' => $attendance->id])->with('success', '申請が完了しました');
     }
 }
