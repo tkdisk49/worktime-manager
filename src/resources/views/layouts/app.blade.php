@@ -1,4 +1,3 @@
-{{-- 一般ユーザー共通ヘッダー --}}
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -26,15 +25,24 @@
         @auth
             <nav class="header__nav">
                 <ul class="header__nav-list">
-                    <li class="header__nav-item">
-                        <a href="/attendance" class="header__nav-link">勤怠</a>
-                    </li>
-                    <li class="header__nav-item">
-                        <a href="/attendance/list" class="header__nav-link">勤怠一覧</a>
-                    </li>
-                    <li class="header__nav-item">
-                        <a href="/stamp_correction_request/list" class="header__nav-link">申請</a>
-                    </li>
+                    @if (Auth::user()->hasLeftWork())
+                        <li class="header__nav-item">
+                            <a href="/attendance/list" class="header__nav-link">今月の出勤一覧</a>
+                        </li>
+                        <li class="header__nav-item">
+                            <a href="/stamp_correction_request/list" class="header__nav-link">申請一覧</a>
+                        </li>
+                    @else
+                        <li class="header__nav-item">
+                            <a href="/attendance" class="header__nav-link">勤怠</a>
+                        </li>
+                        <li class="header__nav-item">
+                            <a href="/attendance/list" class="header__nav-link">勤怠一覧</a>
+                        </li>
+                        <li class="header__nav-item">
+                            <a href="/stamp_correction_request/list" class="header__nav-link">申請</a>
+                        </li>
+                    @endif
                     <li class="header__nav-item">
                         <form action="{{ route('logout') }}" method="POST" class="logout-form">
                             @csrf
