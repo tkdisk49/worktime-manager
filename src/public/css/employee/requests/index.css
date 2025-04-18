@@ -46,6 +46,7 @@
 }
 
 .request-index__table {
+    table-layout: fixed;
     width: 100%;
     border-collapse: collapse;
     font-size: 16px;
@@ -55,13 +56,13 @@
 }
 
 .request-index__thead th {
-    padding: 12px;
+    padding: 12px 8px;
     text-align: left;
     border-bottom: 3px solid #e1e1e1;
 }
 
 .request-index__tbody td {
-    padding: 12px;
+    padding: 12px 8px;
     text-align: left;
     border-top: 2px solid #e1e1e1;
 }
@@ -69,12 +70,11 @@
 .request-index__table th:first-of-type,
 .request-index__table td:first-of-type {
     text-align: center;
-    padding-left: 30px;
 }
 
 .request-index__table th:last-of-type,
 .request-index__table td:last-of-type {
-    padding-right: 30px;
+    text-align: center;
 }
 
 .request-index__tbody td:nth-of-type(3),

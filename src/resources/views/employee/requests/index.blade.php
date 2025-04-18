@@ -1,4 +1,3 @@
-{{-- 申請一覧画面（一般ユーザー） --}}
 @extends('layouts/app')
 
 @section('title')

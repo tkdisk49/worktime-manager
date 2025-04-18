@@ -1,4 +1,3 @@
-{{-- 一般ユーザー共通ヘッダー --}}
 <!DOCTYPE html>
 <html lang="ja">
 

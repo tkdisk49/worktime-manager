@@ -95,10 +95,16 @@
 .attendance-index__th:first-of-type,
 .attendance-index__td:first-of-type {
     text-align: left;
-    padding-left: 60px;
 }
 
-.attendance-index__th:last-of-type,
-.attendance-index__td:last-of-type {
-    padding-right: 60px;
+@media (min-width: 850px) {
+    .attendance-index__th:first-of-type,
+    .attendance-index__td:first-of-type {
+        padding-left: 60px;
+    }
+
+    .attendance-index__th:last-of-type,
+    .attendance-index__td:last-of-type {
+        padding-right: 60px;
+    }
 }

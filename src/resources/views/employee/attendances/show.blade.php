@@ -1,4 +1,3 @@
-{{-- 勤怠詳細画面（一般ユーザー） --}}
 @extends('layouts.app')
 
 @section('title')
@@ -80,9 +79,8 @@
 
                 <p class="attendance-show__notice">*承認待ちのため修正はできません。</p>
             </form>
-
-            {{-- 新規申請ビュー --}}
         @else
+            {{-- 新規申請ビュー --}}
             <form action="{{ route('attendance.modification.store', ['id' => $attendance->id]) }}" method="POST"
                 class="attendance-show__form">
                 @csrf
