@@ -3,12 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AdminAttendanceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.attendances.index');
+        $today = Carbon::today();
+        $dateParam = $request->input('date');
+
+        $currentDate = $dateParam
+            ? Carbon::parse($dateParam)
+            : $today;
+
+        $attendances = Attendance::with('user')
+            ->whereDate('work_date', $currentDate)
+            ->orderBy('user_id')
+            ->get();
+
+        return view('admin.attendances.index', compact('currentDate', 'attendances'));
     }
 }
