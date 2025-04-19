@@ -25,4 +25,9 @@ class AdminAttendanceController extends Controller
 
         return view('admin.attendances.index', compact('currentDate', 'attendances'));
     }
+
+    public function edit()
+    {
+        return view('employee.attendances.show');
+    }
 }
