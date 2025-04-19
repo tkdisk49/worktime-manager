@@ -61,14 +61,10 @@
                                 {{ $attendance->clock_out ? $attendance->formatted_clock_out : '' }}
                             </td>
                             <td class="attendance-index__td">
-                                {{ isset($attendance->total_break_time)
-                                    ? sprintf('%d:%02d', floor($attendance->total_break_time / 60), $attendance->total_break_time % 60)
-                                    : '' }}
+                                {{ $attendance->formatted_total_break_time }}
                             </td>
                             <td class="attendance-index__td">
-                                {{ isset($attendance->total_work_time)
-                                    ? sprintf('%d:%02d', floor($attendance->total_work_time / 60), $attendance->total_work_time % 60)
-                                    : '' }}
+                                {{ $attendance->formatted_total_work_time }}
                             </td>
                             <td class="attendance-index__td">
                                 <a href="{{ route('attendance.modification.show', ['id' => $attendance->id]) }}"
