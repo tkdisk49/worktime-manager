@@ -5,7 +5,7 @@
 @endsection
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/employee/attendances/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/attendances/index.css') }}">
 @endsection
 
 @section('content')
@@ -21,7 +21,7 @@
                 </button>
             </form>
 
-            <div class="attendance-index__current-month">
+            <div class="attendance-index__current">
                 <x-radix-calendar class="attendance-index__calendar-icon" />
                 <p>{{ $currentDate->format('Y/m') }}</p>
             </div>
@@ -47,6 +47,7 @@
                         <th class="attendance-index__th">詳細</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @forelse ($attendances as $attendance)
                         <tr class="attendance-index__tr">

@@ -19,7 +19,7 @@ class EmployeeAttendanceController extends Controller
         $now = Carbon::now()->startOfMonth();
         $monthParam = $request->input('month');
 
-        // 意図しない月に変換されないよう日付を月初で固定
+        // 意図しない月に変換されないよう日付を1日で固定
         $currentDate = $monthParam
             ? Carbon::parse($monthParam . '-01')
             : $now;
