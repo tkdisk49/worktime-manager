@@ -31,6 +31,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('admin.logout');
 
         Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.list');
+
+        Route::patch('/attendance/{id}', [AdminAttendanceController::class, 'update'])->name('admin.attendance.update');
     });
 });
 
@@ -56,8 +58,12 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/attendance/break', [EmployeeAttendanceController::class, 'recordBreakStart'])->name('attendance.break_start');
     Route::patch('/attendance/break', [EmployeeAttendanceController::class, 'recordBreakEnd'])->name('attendance.break_end');
 
-    Route::get('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'show'])->name('attendance.modification.show');
     Route::post('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'store'])->name('attendance.modification.store');
 
     Route::get('/stamp_correction_request/list', [EmployeeRequestController::class, 'index'])->name('employee.requests.index');
+});
+
+//　管理者　一般ユーザー同一ルート
+Route::middleware('auth:web,admin')->group(function () {
+    Route::get('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'show'])->name('attendance.modification.show');
 });

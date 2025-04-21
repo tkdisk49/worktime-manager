@@ -67,8 +67,7 @@
                                 {{ $attendance->formatted_total_work_time }}
                             </td>
                             <td class="attendance-index__td">
-                                {{-- 勤怠詳細画面(管理者)作成後リンク追加 --}}
-                                <a href="#" class="attendance-index__detail-link">詳細</a>
+                                <a href="{{ route('attendance.modification.show', ['id' => $attendance->id]) }}" class="attendance-index__detail-link">詳細</a>
                             </td>
                         </tr>
                     @empty

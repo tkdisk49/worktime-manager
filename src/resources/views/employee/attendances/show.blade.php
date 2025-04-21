@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends($layout)
 
 @section('title')
     勤怠詳細
@@ -22,7 +22,7 @@
                             <td>
                                 <div class="attendance-show__td-container">
                                     <div class="attendance-show__td-content">
-                                        <p>{{ Auth::user()->name }}</p>
+                                        <p>{{ $attendance->user->name }}</p>
                                     </div>
                                 </div>
                             </td>
@@ -81,9 +81,11 @@
             </form>
         @else
             {{-- 新規申請ビュー --}}
-            <form action="{{ route('attendance.modification.store', ['id' => $attendance->id]) }}" method="POST"
-                class="attendance-show__form">
+            <form action="{{ $formAction }}" method="POST" class="attendance-show__form">
                 @csrf
+                @if ($formMethod === 'patch')
+                    @method('PATCH')
+                @endif
                 <div class="attendance-show__table-wrapper">
                     <table class="attendance-show__table">
                         <tr class="attendance-show__tr">
@@ -91,7 +93,7 @@
                             <td>
                                 <div class="attendance-show__td-container">
                                     <div class="attendance-show__td-content">
-                                        <p>{{ Auth::user()->name }}</p>
+                                        <p>{{ $attendance->user->name }}</p>
                                     </div>
                                 </div>
                             </td>

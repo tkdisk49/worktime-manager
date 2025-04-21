@@ -26,8 +26,36 @@ class AdminAttendanceController extends Controller
         return view('admin.attendances.index', compact('currentDate', 'attendances'));
     }
 
-    public function edit()
+    public function edit($id)
     {
-        return view('employee.attendances.show');
+        $attendance = Attendance::with(['user', 'breakTimes'])
+            ->where('id', $id)
+            ->firstOrFail();
+
+        $hasPendingRequest = false;
+
+        $workDate = Carbon::parse($attendance->work_date);
+        $formattedYear = $workDate->isoFormat('YYYY年');
+        $formattedMonthDay = $workDate->isoFormat('M月D日');
+
+        $formAction = route('admin.attendance.update', ['id' => $attendance->id]);
+        $formMethod = 'patch';
+
+        $layout = 'layouts.admin_app';
+
+        return view('employee.attendances.show', compact(
+            'attendance',
+            'hasPendingRequest',
+            'formattedYear',
+            'formattedMonthDay',
+            'formAction',
+            'formMethod',
+            'layout',
+        ));
+    }
+
+    public function update()
+    {
+        //
     }
 }
