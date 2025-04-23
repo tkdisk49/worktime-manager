@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AttendanceModificationRequest;
 use App\Models\Attendance;
@@ -16,9 +17,15 @@ class EmployeeAttendanceModificationController extends Controller
 {
     public function show($id)
     {
+        if (Auth::guard('admin')->check()) {
+            $adminController = app(AdminAttendanceController::class);
+            return $adminController->edit($id);
+        }
+
         $user = Auth::user();
 
         $attendance = Attendance::with([
+            'user',
             'breakTimes',
             'modification',
             'breakTimeModifications',
@@ -34,11 +41,19 @@ class EmployeeAttendanceModificationController extends Controller
         $formattedYear = $workDate->isoFormat('YYYY年');
         $formattedMonthDay = $workDate->isoFormat('M月D日');
 
+        $formAction = route('attendance.modification.store', ['id' => $attendance->id]);
+        $formMethod = 'post';
+
+        $layout = 'layouts.app';
+
         return view('employee.attendances.show', compact(
             'attendance',
             'hasPendingRequest',
             'formattedYear',
             'formattedMonthDay',
+            'formAction',
+            'formMethod',
+            'layout',
         ));
     }
 
@@ -54,13 +69,9 @@ class EmployeeAttendanceModificationController extends Controller
         $newClockIn = $request->input('new_clock_in');
         $newClockOut = $request->input('new_clock_out');
 
-        $newTotalWorkMinutes = null;
-
-        if ($newClockIn && $newClockOut) {
-            $start = Carbon::parse($newClockIn);
-            $end = Carbon::parse($newClockOut);
-            $newTotalWorkMinutes = $start->diffInMinutes($end);
-        }
+        $start = Carbon::parse($newClockIn);
+        $end = Carbon::parse($newClockOut);
+        $newTotalWorkMinutes = $end->diffInMinutes($start);
 
         DB::transaction(function () use (
             $request,

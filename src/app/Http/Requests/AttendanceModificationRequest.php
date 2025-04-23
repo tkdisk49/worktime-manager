@@ -25,9 +25,9 @@ class AttendanceModificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'new_clock_in' => 'nullable|date_format:H:i',
-            'new_clock_out' => 'nullable|date_format:H:i',
-            'new_remarks' => 'required|string|max:1000',
+            'new_clock_in' => 'required|date_format:H:i',
+            'new_clock_out' => 'required|date_format:H:i',
+            'new_remarks' => 'required|string|max:255',
             'existing_breaks.*.start' => 'nullable|date_format:H:i',
             'existing_breaks.*.end' => 'nullable|date_format:H:i',
             'new_break_start' => 'nullable|date_format:H:i',
@@ -58,6 +58,10 @@ class AttendanceModificationRequest extends FormRequest
                         $start = Carbon::parse($break['start']);
                         $end = Carbon::parse($break['end']);
 
+                        if ($start->gt($end)) {
+                            $validator->errors()->add("existing_breaks.$index.start", '休憩開始時間もしくは休憩終了時間が不適切な値です');
+                        }
+
                         if ($start->lt($clockIn) || $end->gt($clockOut)) {
                             $validator->errors()->add("existing_breaks.$index.start", '休憩時間が勤務時間外です');
                         }
@@ -67,6 +71,10 @@ class AttendanceModificationRequest extends FormRequest
                 if ($this->filled('new_break_start') && $this->filled('new_break_end')) {
                     $start = Carbon::parse($this->input('new_break_start'));
                     $end = Carbon::parse($this->input('new_break_end'));
+
+                    if ($start->gt($end)) {
+                        $validator->errors()->add("new_break_start", '休憩開始時間もしくは休憩終了時間が不適切な値です');
+                    }
 
                     if ($start->lt($clockIn) || $end->gt($clockOut)) {
                         $validator->errors()->add('new_break_start', '休憩時間が勤務時間外です');
