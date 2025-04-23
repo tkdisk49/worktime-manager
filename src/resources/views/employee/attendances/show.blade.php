@@ -162,7 +162,7 @@
                             <td>
                                 <div class="attendance-show__td-container">
                                     <div class="attendance-show__td-content">
-                                        <textarea name="new_remarks" class="attendance-show__new-remarks">{{ old('new_remarks') }}</textarea>
+                                        <textarea name="new_remarks" class="attendance-show__new-remarks">{{ old('new_remarks', $attendance->remarks) }}</textarea>
                                     </div>
                                     @error('new_remarks')
                                         <div class="attendance-show__error">{{ $message }}</div>

@@ -91,7 +91,7 @@ class EmployeeAttendanceController extends Controller
 
         $clockInTime = Carbon::parse($attendance->clock_in);
         $clockOutTime = Carbon::parse($currentTime);
-        $totalWorkMinutes = $clockInTime->diffInMinutes($clockOutTime);
+        $totalWorkMinutes = $clockOutTime->diffInMinutes($clockInTime);
 
         $breakMinutes = $attendance->total_break_time ?? 0;
         $netWorkMinutes = max(0, $totalWorkMinutes - $breakMinutes);
@@ -161,7 +161,7 @@ class EmployeeAttendanceController extends Controller
 
         $breakStart = Carbon::parse($latestBreak->break_start);
         $breakEnd = Carbon::parse($currentTime);
-        $breakMinutes = $breakStart->diffInMinutes($breakEnd);
+        $breakMinutes = $breakEnd->diffInMinutes($breakStart);
 
         if (is_null($attendance->total_break_time)) {
             $attendance->total_break_time = 0;

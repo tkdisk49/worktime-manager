@@ -63,7 +63,7 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/stamp_correction_request/list', [EmployeeRequestController::class, 'index'])->name('employee.requests.index');
 });
 
-//　管理者　一般ユーザー同一ルート
+// 管理者 一般ユーザー同一ルート
 Route::middleware('auth:web,admin')->group(function () {
     Route::get('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'show'])->name('attendance.modification.show');
 });

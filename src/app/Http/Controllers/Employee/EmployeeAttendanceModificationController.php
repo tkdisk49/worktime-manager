@@ -69,13 +69,9 @@ class EmployeeAttendanceModificationController extends Controller
         $newClockIn = $request->input('new_clock_in');
         $newClockOut = $request->input('new_clock_out');
 
-        $newTotalWorkMinutes = null;
-
-        if ($newClockIn && $newClockOut) {
-            $start = Carbon::parse($newClockIn);
-            $end = Carbon::parse($newClockOut);
-            $newTotalWorkMinutes = $start->diffInMinutes($end);
-        }
+        $start = Carbon::parse($newClockIn);
+        $end = Carbon::parse($newClockOut);
+        $newTotalWorkMinutes = $end->diffInMinutes($start);
 
         DB::transaction(function () use (
             $request,
