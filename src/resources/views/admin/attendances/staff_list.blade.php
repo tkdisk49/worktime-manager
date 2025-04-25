@@ -5,8 +5,7 @@
 @endsection
 
 @section('css')
-    {{-- staff_list.cssを作成し適用 --}}
-    <link rel="stylesheet" href="#">
+    <link rel="stylesheet" href="{{ asset('css/admin/attendances/staff_list.css') }}">
 @endsection
 
 @section('content')
