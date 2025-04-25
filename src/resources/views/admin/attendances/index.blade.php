@@ -72,7 +72,7 @@
                         </tr>
                     @empty
                         <tr class="attendance-index__tr">
-                            <td colspan="6" class="attendance-index__td attendance-index__id--empty">本日の勤怠記録はありません</td>
+                            <td colspan="6" class="attendance-index__td attendance-index__td--empty">本日の勤怠記録はありません</td>
                         </tr>
                     @endforelse
                 </tbody>
