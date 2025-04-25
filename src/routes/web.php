@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\EmployeeAttendanceController;
@@ -33,6 +34,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.list');
 
         Route::patch('/attendance/{id}', [AdminAttendanceController::class, 'update'])->name('admin.attendance.update');
+
+        Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
     });
 });
 
