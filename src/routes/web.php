@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAttendanceController;
+use App\Http\Controllers\Admin\ApprovalController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
@@ -37,6 +38,8 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
         Route::get('/attendance/staff/{id}', [StaffController::class, 'showMonthlyAttendance'])->name('admin.staff.attendance.monthly');
+
+        Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [ApprovalController::class, 'show'])->name('admin.approval.show');
     });
 });
 
@@ -63,11 +66,11 @@ Route::middleware('auth:web')->group(function () {
     Route::patch('/attendance/break', [EmployeeAttendanceController::class, 'recordBreakEnd'])->name('attendance.break_end');
 
     Route::post('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'store'])->name('attendance.modification.store');
-
-    Route::get('/stamp_correction_request/list', [EmployeeRequestController::class, 'index'])->name('employee.requests.index');
 });
 
 // 管理者 一般ユーザー同一ルート
 Route::middleware('auth:web,admin')->group(function () {
     Route::get('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'show'])->name('attendance.modification.show');
+
+    Route::get('/stamp_correction_request/list', [EmployeeRequestController::class, 'index'])->name('employee.requests.index');
 });
