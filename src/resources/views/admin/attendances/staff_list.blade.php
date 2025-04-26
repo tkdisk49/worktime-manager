@@ -29,7 +29,7 @@
                             <td class="staff-list__td">{{ $staff->email }}</td>
                             {{-- 詳細でuser_idを持たせてユーザーの月次勤怠一覧画面へ遷移 --}}
                             <td class="staff-list__td">
-                                <a href="#" class="staff-list__detail-link">詳細</a>
+                                <a href="{{ route('admin.staff.attendance.monthly', ['id' => $staff->id]) }}" class="staff-list__detail-link">詳細</a>
                             </td>
                         </tr>
                     @empty
