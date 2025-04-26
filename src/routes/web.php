@@ -36,6 +36,7 @@ Route::prefix('admin')->group(function () {
         Route::patch('/attendance/{id}', [AdminAttendanceController::class, 'update'])->name('admin.attendance.update');
 
         Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
+        Route::get('/attendance/staff/{id}', [StaffController::class, 'showMonthlyAttendance'])->name('admin.staff.attendance.monthly');
     });
 });
 
