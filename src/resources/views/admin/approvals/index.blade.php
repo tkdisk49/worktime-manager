@@ -1,1 +1,2 @@
-{{-- 修正申請一覧画面（管理者） --}}
+@extends('layouts/admin_app')
+

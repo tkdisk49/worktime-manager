@@ -1,4 +1,4 @@
-@extends('layouts/app')
+@extends($layout)
 
 @section('title')
     申請一覧
@@ -44,8 +44,13 @@
                                 <td>{{ $requestItem->new_remarks }}</td>
                                 <td>{{ $requestItem->formatted_created_at }}</td>
                                 <td>
-                                    <a href="{{ route('attendance.modification.show', ['id' => $requestItem->attendance_id]) }}"
-                                        class="request-index__detail-link">詳細</a>
+                                    @if (Auth::guard('admin')->check())
+                                        <a href="{{ route('admin.approval.show', ['attendance_correct_request' => $requestItem->attendance_id]) }}"
+                                            class="request-index__detail-link">詳細</a>
+                                    @else
+                                        <a href="{{ route('attendance.modification.show', ['id' => $requestItem->attendance_id]) }}"
+                                            class="request-index__detail-link">詳細</a>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -62,8 +67,13 @@
                                 <td>{{ $requestItem->new_remarks }}</td>
                                 <td>{{ $requestItem->formatted_created_at }}</td>
                                 <td>
-                                    <a href="{{ route('attendance_modification.show', ['id' => $requestItem->attendance_id]) }}"
-                                        class="request-index__detail-link">詳細</a>
+                                    @if (Auth::guard('admin')->check())
+                                        <a href="{{ route('admin.approval.show', ['attendance_correct_request' => $requestItem->attendance_id]) }}"
+                                            class="request-index__detail-link">詳細</a>
+                                    @else
+                                        <a href="{{ route('attendance.modification.show', ['id' => $requestItem->attendance_id]) }}"
+                                            class="request-index__detail-link">詳細</a>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
