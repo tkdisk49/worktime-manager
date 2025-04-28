@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// 管理者用ルート
+// 管理者用ルート パス(/admin/...)
 Route::prefix('admin')->group(function () {
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminLoginController::class, 'create'])->name('admin.login');
@@ -38,9 +38,13 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
         Route::get('/attendance/staff/{id}', [StaffController::class, 'showMonthlyAttendance'])->name('admin.staff.attendance.monthly');
-
-        Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [ApprovalController::class, 'show'])->name('admin.approval.show');
     });
+});
+
+// 管理者用ルート /adminのプレフィックスなし
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [ApprovalController::class, 'show'])->name('admin.approval.show');
+    Route::patch('/stamp_correction_request/approve/{attendance_correct_request}', [ApprovalController::class, 'update'])->name('admin.approval.update');
 });
 
 // 一般ユーザー用ルート

@@ -15,7 +15,8 @@
         <h2 class="attendance-show__title">勤怠詳細</h2>
 
         {{-- updateメソッド作成後form action記載 --}}
-        <form action="#" method="POST" class="attendance-show__form">
+        <form action="{{ route('admin.approval.update', ['attendance_correct_request' => $attendance->id]) }}" method="POST"
+            class="attendance-show__form">
             @csrf
             @method('PATCH')
             <div class="attendance-show__table-wrapper">
@@ -94,8 +95,7 @@
                 @if ($hasPendingRequest)
                     <button type="submit" class="attendance-show__form-button">承認</button>
                 @else
-                    <button type="button" class="attendance-show__form-button form-button--disabled"
-                        disabled>承認済み</button>
+                    <button type="button" class="attendance-show__form-button form-button--disabled" disabled>承認済み</button>
                 @endif
             </div>
         </form>
