@@ -54,11 +54,11 @@
                             <th>休憩</th>
                             <td>
                                 <div class="attendance-show__td-container">
-                                    @foreach ($attendance->breakTimeModifications as $mod)
+                                    @foreach ($attendance->breakTimeModifications as $breakTimeMod)
                                         <div class="attendance-show__td-content">
-                                            <p>{{ $mod->formatted_new_break_start }}</p>
+                                            <p>{{ $breakTimeMod->formatted_new_break_start }}</p>
                                             <p>〜</p>
-                                            <p>{{ $mod->formatted_new_break_end }}</p>
+                                            <p>{{ $breakTimeMod->formatted_new_break_end }}</p>
                                         </div>
                                     @endforeach
                                 </div>

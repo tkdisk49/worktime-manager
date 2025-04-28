@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\AttendanceModification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ApprovalController extends Controller
@@ -31,6 +33,20 @@ class ApprovalController extends Controller
 
     public function show($attendanceCorrectRequest)
     {
-        return view('admin.approvals.show');
+        $attendance = Attendance::with([
+            'user',
+            'modification',
+            'breakTimeModifications'
+        ])->findOrFail($attendanceCorrectRequest);
+
+        $hasPendingRequest = AttendanceModification::where('attendance_id', $attendance->id)
+            ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
+            ->exists();
+
+        $workDate = Carbon::parse($attendance->work_date);
+        $formattedYear = $workDate->isoFormat('YYYY年');
+        $formattedMonthDay = $workDate->isoFormat('M月D日');
+
+        return view('admin.approvals.show', compact('attendance', 'hasPendingRequest', 'formattedYear', 'formattedMonthDay'));
     }
 }
