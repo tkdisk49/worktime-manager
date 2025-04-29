@@ -18,6 +18,7 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     background-color: #000;
     color: #fff;
 }
@@ -91,12 +92,13 @@ input {
     color: #008000;
 }
 
-@media (max-width: 750px) {
+@media (max-width: 900px) {
     .header__nav-list {
         gap: 10px;
     }
 
     .header__nav-link {
-        font-size: 20px;
+        font-size: 22px;
+        padding: 5px 6px;
     }
 }
