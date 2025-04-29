@@ -88,3 +88,13 @@
     border: none;
     cursor: pointer;
 }
+
+@media (max-width: 850px) {
+    .request-index__thead th {
+        padding: 12px 6px;
+    }
+
+    .request-index__tbody td {
+        padding: 12px 6px;
+    }
+}
