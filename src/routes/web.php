@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->group(function () {
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminLoginController::class, 'create'])->name('admin.login');
-        Route::post('/login', [AdminLoginController::class, 'store']);
+        Route::post('/login', [AdminLoginController::class, 'store'])->name('admin.login.store');
     });
 
     Route::middleware('auth:admin')->group(function () {
@@ -50,7 +50,7 @@ Route::middleware('auth:admin')->group(function () {
 // 一般ユーザー用ルート
 Route::middleware('guest:web')->group(function () {
     Route::get('/login', [EmployeeLoginController::class, 'create'])->name('login');
-    Route::post('/login', [EmployeeLoginController::class, 'store']);
+    Route::post('/login', [EmployeeLoginController::class, 'store'])->name('login.store');
 });
 
 // 勤怠登録画面表示時にwork_statusチェックを実施

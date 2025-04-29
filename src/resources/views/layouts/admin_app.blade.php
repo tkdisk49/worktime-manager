@@ -1,4 +1,3 @@
-{{-- 管理者共通ヘッダー --}}
 <!DOCTYPE html>
 <html lang="ja">
 

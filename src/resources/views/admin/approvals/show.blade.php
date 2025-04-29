@@ -1,4 +1,3 @@
-{{-- 修正申請承認画面（管理者） --}}
 @extends('layouts.admin_app')
 
 @section('title')
@@ -14,7 +13,6 @@
     <div class="attendance-show">
         <h2 class="attendance-show__title">勤怠詳細</h2>
 
-        {{-- updateメソッド作成後form action記載 --}}
         <form action="{{ route('admin.approval.update', ['attendance_correct_request' => $attendance->id]) }}" method="POST"
             class="attendance-show__form">
             @csrf
