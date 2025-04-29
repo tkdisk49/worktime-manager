@@ -13,7 +13,7 @@
         <div class="login__wrapper">
             <h2 class="login__title">ログイン</h2>
 
-            <form method="POST" action="{{ url('/login') }}" class="login__form">
+            <form method="POST" action="{{ route('login.store') }}" class="login__form">
                 @csrf
                 <div class="login__form-group">
                     <label for="email">メールアドレス</label>
