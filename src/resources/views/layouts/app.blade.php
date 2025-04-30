@@ -22,7 +22,7 @@
                 <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH" class="header__logo-img">
             </a>
         </div>
-        @auth
+        @if (Auth::check() && Auth::user()->hasVerifiedEmail())
             <nav class="header__nav">
                 <ul class="header__nav-list">
                     @if (Auth::user()->hasLeftWork())
@@ -51,7 +51,7 @@
                     </li>
                 </ul>
             </nav>
-        @endauth
+        @endif
     </header>
 
     <main class="content">

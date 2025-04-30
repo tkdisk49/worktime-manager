@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Admin\ApprovalController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\EmployeeLoginController;
 use App\Http\Controllers\Employee\EmployeeAttendanceController;
 use App\Http\Controllers\Employee\EmployeeAttendanceModificationController;
@@ -53,12 +54,19 @@ Route::middleware('guest:web')->group(function () {
     Route::post('/login', [EmployeeLoginController::class, 'store'])->name('login.store');
 });
 
+// メール認証ルート
+Route::middleware('auth:web')->group(function () {
+    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.resend');
+});
+
 // 勤怠登録画面表示時にwork_statusチェックを実施
-Route::middleware(['auth:web', CheckAttendanceStatus::class])->group(function () {
+Route::middleware(['auth:web', 'verified', CheckAttendanceStatus::class])->group(function () {
     Route::get('/attendance', [EmployeeAttendanceController::class, 'create'])->name('attendance.create');
 });
 
-Route::middleware('auth:web')->group(function () {
+Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::post('/logout', [EmployeeLoginController::class, 'destroy'])->name('logout');
 
     Route::get('/attendance/list', [EmployeeAttendanceController::class, 'index'])->name('attendance.index');
