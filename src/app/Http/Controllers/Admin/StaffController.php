@@ -36,4 +36,9 @@ class StaffController extends Controller
 
         return view('admin.attendances.staff_attendance', compact('staff', 'currentDate', 'attendances'));
     }
+
+    public function exportCsv()
+    {
+        //
+    }
 }
