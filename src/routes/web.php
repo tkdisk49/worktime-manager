@@ -39,6 +39,7 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/staff/list', [StaffController::class, 'index'])->name('admin.staff.index');
         Route::get('/attendance/staff/{id}', [StaffController::class, 'showMonthlyAttendance'])->name('admin.staff.attendance.monthly');
+        Route::get('/attendance/staff/{id}/export', [StaffController::class, 'exportCsv'])->name('admin.staff.attendance.monthly.csv');
     });
 });
 
