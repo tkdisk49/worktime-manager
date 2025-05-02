@@ -14,7 +14,8 @@
         <h2 class="attendance-index__title">{{ $staff->name }}さんの勤怠</h2>
 
         <div class="attendance-index__nav">
-            <form action="{{ route('admin.staff.attendance.monthly', ['id' => $staff->id]) }}" method="GET" class="attendance-index__nav-form">
+            <form action="{{ route('admin.staff.attendance.monthly', ['id' => $staff->id]) }}" method="GET"
+                class="attendance-index__nav-form">
                 <input type="hidden" name="month" value="{{ $currentDate->copy()->subMonth()->format('Y-m') }}">
                 <button type="submit" class="attendance-index__nav-button">
                     <x-fas-arrow-left class="attendance-index__nav-icon" />
@@ -27,7 +28,8 @@
                 <p>{{ $currentDate->format('Y/m') }}</p>
             </div>
 
-            <form action="{{ route('admin.staff.attendance.monthly', ['id' => $staff->id]) }}" method="GET" class="attendance-index__nav-form">
+            <form action="{{ route('admin.staff.attendance.monthly', ['id' => $staff->id]) }}" method="GET"
+                class="attendance-index__nav-form">
                 <input type="hidden" name="month" value="{{ $currentDate->copy()->addMonth()->format('Y-m') }}">
                 <button type="submit" class="attendance-index__nav-button">
                     <p>翌月</p>
@@ -68,7 +70,8 @@
                                 {{ $attendance->formatted_total_work_time }}
                             </td>
                             <td class="attendance-index__td">
-                                <a href="{{ route('attendance.modification.show', ['id' => $attendance->id]) }}" class="attendance-index__detail-link">詳細</a>
+                                <a href="{{ route('attendance.modification.show', ['id' => $attendance->id]) }}"
+                                    class="attendance-index__detail-link">詳細</a>
                             </td>
                         </tr>
                     @empty
@@ -81,8 +84,10 @@
         </div>
 
         <div class="attendance-index__button">
-            {{-- 応用機能: 当該ユーザーの選択した月の勤怠情報をCSVでダウンロード --}}
-            <button type="submit" class="attendance-index__csv-export-button">CSV出力</button>
+            <form action="{{ route('admin.staff.attendance.monthly.csv', ['id' => $staff->id]) }}" method="GET">
+                <input type="hidden" name="month" value="{{ $currentDate->format('Y-m') }}">
+                <button type="submit" class="attendance-index__csv-export-button">CSV出力</button>
+            </form>
         </div>
     </div>
 @endsection
