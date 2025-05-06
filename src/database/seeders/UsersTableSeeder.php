@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'テストユーザー',
+                'name' => 'ユーザー',
                 'email' => 'user@example.com',
                 'password' => bcrypt('password'),
             ],
@@ -54,12 +54,12 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
-        $now = Carbon::today()->subMonth(2)->startOfMonth();
+        $seedDate = Carbon::today()->subMonth(2)->startOfMonth();
 
-        $addTimestamps = function ($user) use ($now) {
+        $addTimestamps = function ($user) use ($seedDate) {
             return array_merge($user, [
-                'created_at' => $now,
-                'updated_at' => $now,
+                'created_at' => $seedDate,
+                'updated_at' => $seedDate,
             ]);
         };
 
