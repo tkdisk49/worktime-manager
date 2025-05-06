@@ -1,0 +1,44 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+class AttendanceTimestampTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /** @var \App\Models\User */
+    protected $user;
+
+    /** @var \Carbon\Carbon */
+    protected $now;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->now = Carbon::create(2025, 5, 1, 8, 0, 0);
+        Carbon::setTestNow($this->now);
+
+        $this->user = User::factory()->create();
+    }
+
+    public function testCreateDisplaysCurrentDateAndTime()
+    {
+        $response = $this->actingAs($this->user, 'web')
+            ->get(route('attendance.create'));
+
+        $response->assertStatus(200);
+
+        $expectedDate = $this->now->isoFormat('YYYY年M月D日(ddd)');
+        $expectedTime = $this->now->format('H:i');
+
+        $response->assertSee($expectedDate);
+        $response->assertSee($expectedTime);
+    }
+}
