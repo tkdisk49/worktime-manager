@@ -22,7 +22,7 @@ class AttendanceTimestampTest extends TestCase
     {
         parent::setUp();
 
-        $this->now = Carbon::create(2025, 5, 1, 8, 0, 0);
+        $this->now = Carbon::create(2025, 5, 10, 8, 0, 0, 'Asia/Tokyo');
         Carbon::setTestNow($this->now);
 
         $this->user = User::factory()->create();
