@@ -12,11 +12,10 @@ class AttendanceClockOutTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var \App\Models\User */
-    protected $user;
+    protected User $user;
 
-    /** @var \Carbon\Carbon */
-    protected $clockInTime, $clockOutTime;
+    protected Carbon $clockInTime;
+    protected Carbon $clockOutTime;
 
     protected function setUp(): void
     {

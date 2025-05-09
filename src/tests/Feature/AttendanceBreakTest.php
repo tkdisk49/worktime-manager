@@ -13,11 +13,9 @@ class AttendanceBreakTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var \App\Models\User */
-    protected $user;
+    protected User $user;
 
-    /** @var \Carbon\Carbon */
-    protected $now;
+    protected Carbon $now;
 
     protected function setUp(): void
     {

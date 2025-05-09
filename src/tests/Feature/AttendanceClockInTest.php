@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Admin;
 use App\Models\Attendance;
 use App\Models\User;
 use Carbon\Carbon;
@@ -13,11 +12,9 @@ class AttendanceClockInTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var \App\Models\User */
-    protected $user;
+    protected User $user;
 
-    /** @var \Carbon\Carbon */
-    protected $now;
+    protected Carbon $now;
 
     protected function setUp(): void
     {

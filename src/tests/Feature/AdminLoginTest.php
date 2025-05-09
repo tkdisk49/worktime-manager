@@ -11,8 +11,7 @@ class AdminLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var \App\Models\Admin */
-    protected $admin;
+    protected Admin $admin;
 
     protected function setUp(): void
     {

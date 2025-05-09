@@ -13,8 +13,7 @@ class AttendanceStatusTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @var \App\Models\User */
-    protected $user;
+    protected User $user;
 
     protected function setUp(): void
     {
