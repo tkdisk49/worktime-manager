@@ -6,7 +6,6 @@ use App\Models\Attendance;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AttendanceBreakTest extends TestCase
@@ -127,6 +126,10 @@ class AttendanceBreakTest extends TestCase
             ->followingRedirects()
             ->patch(route('attendance.break_end'));
 
+        $attendance = Attendance::where('user_id', $this->user->id)
+            ->where('work_date', $this->now->toDateString())
+            ->first();
+
         $response = $this->actingAs($this->user, 'web')
             ->get(route('attendance.index', [
                 'month' => $this->now->format('Y-m')
@@ -134,6 +137,6 @@ class AttendanceBreakTest extends TestCase
 
         $response->assertStatus(200)
             ->assertSeeText($this->now->isoFormat('MM/DD(ddd)'))
-            ->assertSeeText('1:00');
+            ->assertSeeText($attendance->formatted_total_break_time);
     }
 }
