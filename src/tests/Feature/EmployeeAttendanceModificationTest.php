@@ -20,20 +20,27 @@ class EmployeeAttendanceModificationTest extends TestCase
     protected Carbon $now;
     protected Attendance $attendance;
     protected BreakTime $breakTime;
+    protected string $today;
+    protected string $yesterday;
+    protected string $dayBeforeYesterday;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->now = Carbon::create(2025, 5, 10, 8, 0, 0, 'Asia/Tokyo');
+        $this->now = Carbon::create(2025, 5, 10, 18, 0, 0, 'Asia/Tokyo');
         Carbon::setTestNow($this->now);
+
+        $this->today = $this->now->toDateString();
+        $this->yesterday = $this->now->copy()->subDay()->toDateString();
+        $this->dayBeforeYesterday = $this->now->copy()->subDays(2)->toDateString();
 
         $this->user = User::factory()->create();
         $this->actingAs($this->user, 'web');
 
         $this->attendance = Attendance::factory()->create([
             'user_id' => $this->user->id,
-            'work_date' => $this->now->copy()->subDay()->toDateString(),
+            'work_date' => $this->yesterday,
         ]);
 
         $this->breakTime = BreakTime::factory()->create([
@@ -213,12 +220,14 @@ class EmployeeAttendanceModificationTest extends TestCase
             ->where('user_id', $this->user->id)
             ->first();
 
-        $this->get(route('employee.requests.index'))
-            ->assertSee('<td>承認待ち</td>', false)
-            ->assertSeeText($this->user->name)
-            ->assertSeeText($modification->formatted_work_date)
-            ->assertSeeText($newRemarks)
-            ->assertSeeText($modification->formatted_created_at);
+        $response =  $this->get(route('employee.requests.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('<td>承認待ち</td>', false);
+        $response->assertSeeText($this->user->name);
+        $response->assertSeeText($modification->formatted_work_date);
+        $response->assertSeeText($newRemarks);
+        $response->assertSeeText($modification->formatted_created_at);
 
         $response = $this->get(route('admin.approval.show', [
             'attendance_correct_request' => $modification->attendance_id,
@@ -227,102 +236,173 @@ class EmployeeAttendanceModificationTest extends TestCase
         $formattedYear = Carbon::parse($this->attendance->work_date)->isoFormat('YYYY年');
         $formattedMonthDay = Carbon::parse($this->attendance->work_date)->isoFormat('M月D日');
 
-        $response->assertStatus(200)
-            ->assertSeeText($this->user->name)
-            ->assertSeeText($formattedYear)
-            ->assertSeeText($formattedMonthDay)
-            ->assertSeeText($newClockIn)
-            ->assertSeeText($newClockOut)
-            ->assertSeeText($newBreakStart)
-            ->assertSeeText($newBreakEnd)
-            ->assertSeeText($newRemarks);
+        $response->assertStatus(200);
+        $response->assertSeeText($this->user->name);
+        $response->assertSeeText($formattedYear);
+        $response->assertSeeText($formattedMonthDay);
+        $response->assertSeeText($newClockIn);
+        $response->assertSeeText($newClockOut);
+        $response->assertSeeText($newBreakStart);
+        $response->assertSeeText($newBreakEnd);
+        $response->assertSeeText($newRemarks);
     }
 
     public function testAllPendingRequestsAreDisplayed()
     {
         $newRemarks = 'Test';
 
-        $this->get(route('attendance.modification.show', [
-            'id' => $this->attendance->id,
-        ]))->assertStatus(200);
+        $attendances = collect([
+            Attendance::factory()->create([
+                'user_id' => $this->user->id,
+                'work_date' => $this->today,
+            ]),
 
-        $this->post(route('attendance.modification.store', [
-            'id' => $this->attendance->id,
-        ]), [
-            'new_clock_in' => '10:00',
-            'new_clock_out' => '18:00',
-            'new_remarks' => $newRemarks,
-            'existing_breaks' => [
-                [
-                    'id' => $this->breakTime->id,
-                    'start' => '12:00',
-                    'end' => '13:00',
-                ],
-            ],
+            Attendance::factory()->create([
+                'user_id' => $this->user->id,
+                'work_date' => $this->yesterday,
+            ]),
+
+            Attendance::factory()->create([
+                'user_id' => $this->user->id,
+                'work_date' => $this->dayBeforeYesterday,
+            ]),
         ]);
 
-        $modification = AttendanceModification::where('attendance_id', $this->attendance->id)
-            ->where('user_id', $this->user->id)
-            ->first();
+        $pairs = $attendances->map(function ($attendance) {
+            $breakTime = BreakTime::factory()->create([
+                'attendance_id' => $attendance->id,
+            ]);
+            return [
+                'attendance' => $attendance,
+                'breakTime' => $breakTime,
+            ];
+        });
+
+        foreach ($pairs as $pair) {
+            $attendance = $pair['attendance'];
+            $breakTime = $pair['breakTime'];
+
+            $this->get(route('attendance.modification.show', [
+                'id' => $attendance->id,
+            ]))->assertStatus(200);
+
+            $this->post(route('attendance.modification.store', [
+                'id' => $attendance->id,
+            ]), [
+                'new_clock_in' => '10:00',
+                'new_clock_out' => '18:00',
+                'new_remarks' => $newRemarks,
+                'existing_breaks' => [
+                    [
+                        'id' => $breakTime->id,
+                        'start' => '12:00',
+                        'end' => '13:00',
+                    ],
+                ],
+            ]);
+        }
+
+        $modifications = AttendanceModification::where('user_id', $this->user->id)
+            ->get();
 
         $response = $this->get(route('employee.requests.index'));
 
-        $response->assertStatus(200)
-            ->assertSee('<td>承認待ち</td>', false)
-            ->assertSeeText($this->user->name)
-            ->assertSeeText($modification->formatted_work_date)
-            ->assertSeeText($newRemarks)
-            ->assertSeeText($modification->formatted_created_at);
+        $response->assertStatus(200);
+
+        foreach ($modifications as $modification) {
+            $response->assertSee('<td>承認待ち</td>', false);
+            $response->assertSeeText($this->user->name);
+            $response->assertSeeText($modification->formatted_work_date);
+            $response->assertSeeText($newRemarks);
+            $response->assertSeeText($modification->formatted_created_at);
+        }
     }
 
     public function testAllApprovedRequestsAreDisplayed()
     {
         $newRemarks = 'Test';
 
-        $this->get(route('attendance.modification.show', [
-            'id' => $this->attendance->id,
-        ]))->assertStatus(200);
+        $attendances = collect([
+            Attendance::factory()->create([
+                'user_id' => $this->user->id,
+                'work_date' => $this->today,
+            ]),
 
-        $this->post(route('attendance.modification.store', [
-            'id' => $this->attendance->id,
-        ]), [
-            'new_clock_in' => '10:00',
-            'new_clock_out' => '18:00',
-            'new_remarks' => $newRemarks,
-            'existing_breaks' => [
-                [
-                    'id' => $this->breakTime->id,
-                    'start' => '12:00',
-                    'end' => '13:00',
-                ],
-            ],
+            Attendance::factory()->create([
+                'user_id' => $this->user->id,
+                'work_date' => $this->yesterday,
+            ]),
+
+            Attendance::factory()->create([
+                'user_id' => $this->user->id,
+                'work_date' => $this->dayBeforeYesterday,
+            ]),
         ]);
 
+        $pairs = $attendances->map(function ($attendance) {
+            $breakTime = BreakTime::factory()->create([
+                'attendance_id' => $attendance->id,
+            ]);
+            return [
+                'attendance' => $attendance,
+                'breakTime' => $breakTime,
+            ];
+        });
+
+        foreach ($pairs as $pair) {
+            $attendance = $pair['attendance'];
+            $breakTime = $pair['breakTime'];
+
+            $this->get(route('attendance.modification.show', [
+                'id' => $attendance->id,
+            ]))->assertStatus(200);
+
+            $this->post(route('attendance.modification.store', [
+                'id' => $attendance->id,
+            ]), [
+                'new_clock_in' => '10:00',
+                'new_clock_out' => '18:00',
+                'new_remarks' => $newRemarks,
+                'existing_breaks' => [
+                    [
+                        'id' => $breakTime->id,
+                        'start' => '12:00',
+                        'end' => '13:00',
+                    ],
+                ],
+            ]);
+        }
+
         $this->admin = Admin::factory()->create();
-        $this->actingAs($this->admin, 'admin')
-            ->get(route('admin.approval.show', [
-                'attendance_correct_request' => $this->attendance->id,
+        $this->actingAs($this->admin, 'admin');
+
+        foreach ($attendances as $attendance) {
+            $this->get(route('admin.approval.show', [
+                'attendance_correct_request' => $attendance->id,
             ]));
 
-        $this->patch(route('admin.approval.update', [
-            'attendance_correct_request' => $this->attendance->id,
-        ]));
+            $this->patch(route('admin.approval.update', [
+                'attendance_correct_request' => $attendance->id,
+            ]));
+        }
 
-        $modification = AttendanceModification::where('attendance_id', $this->attendance->id)
-            ->where('user_id', $this->user->id)
-            ->first();
+        $modifications = AttendanceModification::where('user_id', $this->user->id)
+            ->get();
 
         $response = $this->actingAs($this->user, 'web')
             ->get(route('employee.requests.index', [
                 'status' => 'approved',
             ]));
 
-        $response->assertStatus(200)
-            ->assertSee('<td>承認済み</td>', false)
-            ->assertSeeText($this->user->name)
-            ->assertSeeText($modification->formatted_work_date)
-            ->assertSeeText($newRemarks)
-            ->assertSeeText($modification->formatted_created_at);
+        $response->assertStatus(200);
+
+        foreach ($modifications as $modification) {
+            $response->assertSee('<td>承認済み</td>', false);
+            $response->assertSeeText($this->user->name);
+            $response->assertSeeText($modification->formatted_work_date);
+            $response->assertSeeText($newRemarks);
+            $response->assertSeeText($modification->formatted_created_at);
+        }
     }
 
     public function testNavigatesToRequestDetailPageWhenDetailLinkClicked()
@@ -365,14 +445,14 @@ class EmployeeAttendanceModificationTest extends TestCase
         $formattedYear = Carbon::parse($this->attendance->work_date)->isoFormat('YYYY年');
         $formattedMonthDay = Carbon::parse($this->attendance->work_date)->isoFormat('M月D日');
 
-        $response->assertStatus(200)
-            ->assertSeeText($this->user->name)
-            ->assertSeeText($formattedYear)
-            ->assertSeeText($formattedMonthDay)
-            ->assertSeeText($newClockIn)
-            ->assertSeeText($newClockOut)
-            ->assertSeeText($newBreakStart)
-            ->assertSeeText($newBreakEnd)
-            ->assertSeeText($newRemarks);
+        $response->assertStatus(200);
+        $response->assertSeeText($this->user->name);
+        $response->assertSeeText($formattedYear);
+        $response->assertSeeText($formattedMonthDay);
+        $response->assertSeeText($newClockIn);
+        $response->assertSeeText($newClockOut);
+        $response->assertSeeText($newBreakStart);
+        $response->assertSeeText($newBreakEnd);
+        $response->assertSeeText($newRemarks);
     }
 }
