@@ -183,7 +183,6 @@ class EmployeeAttendanceController extends Controller
 
     private function getTodayAttendanceData(): array
     {
-        /** @var \App\Models\User $user */
         $user = Auth::user();
         $now = Carbon::now();
         $today = $now->toDateString();

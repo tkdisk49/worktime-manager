@@ -17,8 +17,8 @@
             </div>
 
             <div class="verify-email__group">
-                @if (app()->isLocal())
-                    <a href="http://localhost:8025" class="verify-email__link">認証はこちらから</a>
+                @if (app()->isLocal() || config('app.env') === 'testing')
+                    <a href="{{ route('mailhog.redirect') }}" class="verify-email__link">認証はこちらから</a>
                 @else
                     <p>メールに記載のリンクをクリックして下さい。</p>
                 @endif

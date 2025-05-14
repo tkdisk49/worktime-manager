@@ -43,7 +43,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// 管理者用ルート /adminのプレフィックスなし
+// 管理者用ルート プレフィックスなし
 Route::middleware('auth:admin')->group(function () {
     Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [ApprovalController::class, 'show'])->name('admin.approval.show');
     Route::patch('/stamp_correction_request/approve/{attendance_correct_request}', [ApprovalController::class, 'update'])->name('admin.approval.update');
@@ -61,6 +61,13 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
     Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.resend');
 });
+
+// 開発環境でのMailHogへの画面遷移
+if (app()->isLocal() || config('app.env') === 'testing') {
+    Route::get('/mailhog', function () {
+        return redirect('http://localhost:8025');
+    })->name('mailhog.redirect');
+}
 
 // 勤怠登録画面表示時にwork_statusチェックを実施
 Route::middleware(['auth:web', 'verified', CheckAttendanceStatus::class])->group(function () {
