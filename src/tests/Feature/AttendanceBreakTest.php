@@ -13,7 +13,6 @@ class AttendanceBreakTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-
     protected Carbon $now;
 
     protected function setUp(): void
@@ -26,6 +25,7 @@ class AttendanceBreakTest extends TestCase
         $this->user = User::factory()->create();
 
         $this->user->update(['work_status' => User::WORK_WORKING]);
+        $this->actingAs($this->user, 'web');
 
         Attendance::factory()->create([
             'user_id' => $this->user->id,
@@ -38,14 +38,12 @@ class AttendanceBreakTest extends TestCase
 
     public function testBreakStartButtonWorksCorrectly()
     {
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200)
             ->assertSee('<button type="submit" class="attendance-create__button attendance-create__button--white">休憩入</button>', false);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $response = $this->followingRedirects()
             ->post(route('attendance.break_start'));
 
         $response->assertStatus(200)
@@ -54,15 +52,12 @@ class AttendanceBreakTest extends TestCase
 
     public function testBreakStartCanBeCalledMultipleTimesPerDay()
     {
-        $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $this->get(route('attendance.create'));
 
-        $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $this->followingRedirects()
             ->post(route('attendance.break_start'));
 
-        $response = $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $response = $this->followingRedirects()
             ->patch(route('attendance.break_end'));
 
         $response->assertStatus(200)
@@ -71,18 +66,15 @@ class AttendanceBreakTest extends TestCase
 
     public function testBreakEndButtonWorksCorrectly()
     {
-        $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $this->get(route('attendance.create'));
 
-        $response = $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $response = $this->followingRedirects()
             ->post(route('attendance.break_start'));
 
         $response->assertStatus(200)
             ->assertSee('<button type="submit" class="attendance-create__button attendance-create__button--white">休憩戻</button>', false);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $response = $this->followingRedirects()
             ->patch(route('attendance.break_end'));
 
         $response->assertStatus(200)
@@ -91,19 +83,15 @@ class AttendanceBreakTest extends TestCase
 
     public function testBreakEndCanBeCalledMultipleTimesPerDay()
     {
-        $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $this->get(route('attendance.create'));
 
-        $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $this->followingRedirects()
             ->post(route('attendance.break_start'));
 
-        $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $this->followingRedirects()
             ->patch(route('attendance.break_end'));
 
-        $response = $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $response = $this->followingRedirects()
             ->post(route('attendance.break_start'));
 
         $response->assertStatus(200)
@@ -112,28 +100,24 @@ class AttendanceBreakTest extends TestCase
 
     public function testBreakTimeIsVisibleInAttendanceList()
     {
-        $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $this->get(route('attendance.create'));
 
-        $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $this->followingRedirects()
             ->post(route('attendance.break_start'));
 
         $this->now = Carbon::create(2025, 5, 10, 14, 0, 0, 'Asia/Tokyo');
         Carbon::setTestNow($this->now);
 
-        $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $this->followingRedirects()
             ->patch(route('attendance.break_end'));
 
         $attendance = Attendance::where('user_id', $this->user->id)
             ->where('work_date', $this->now->toDateString())
             ->first();
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.index', [
-                'month' => $this->now->format('Y-m')
-            ]));
+        $response = $this->get(route('attendance.index', [
+            'month' => $this->now->format('Y-m')
+        ]));
 
         $response->assertStatus(200)
             ->assertSeeText($this->now->isoFormat('MM/DD(ddd)'))

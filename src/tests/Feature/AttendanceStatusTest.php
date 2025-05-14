@@ -6,7 +6,6 @@ use App\Models\Attendance;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AttendanceStatusTest extends TestCase
@@ -14,20 +13,27 @@ class AttendanceStatusTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+    protected Carbon $now;
+    protected string $today;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->now = Carbon::create(2025, 5, 10, 18, 0, 0, 'Asia/Tokyo');
+        Carbon::setTestNow($this->now);
+
+        $this->today = $this->now->toDateString();
+
         $this->user = User::factory()->create();
+        $this->actingAs($this->user, 'web');
     }
 
     public function testOffDutyStatusLabelIsDisplayed()
     {
         $this->user->update(['work_status' => User::WORK_OFF_DUTY]);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200);
         $response->assertSeeText('勤務外');
@@ -40,13 +46,12 @@ class AttendanceStatusTest extends TestCase
         // 当日の勤怠データがない場合、ステータスが勤務外にリセットされるため作成
         Attendance::factory()->create([
             'user_id' => $this->user->id,
-            'work_date' => Carbon::today(),
+            'work_date' => $this->today,
             'clock_in' => '09:00:00',
             'clock_out' => null,
         ]);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200);
         $response->assertSeeText('出勤中');
@@ -58,13 +63,12 @@ class AttendanceStatusTest extends TestCase
 
         Attendance::factory()->create([
             'user_id' => $this->user->id,
-            'work_date' => Carbon::today(),
+            'work_date' => $this->today,
             'clock_in' => '09:00:00',
             'clock_out' => null,
         ]);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200);
         $response->assertSeeText('休憩中');
@@ -76,13 +80,12 @@ class AttendanceStatusTest extends TestCase
 
         Attendance::factory()->create([
             'user_id' => $this->user->id,
-            'work_date' => Carbon::today(),
+            'work_date' => $this->today,
             'clock_in' => '09:00:00',
             'clock_out' => '18:00:00',
         ]);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200);
         $response->assertSeeText('退勤済');

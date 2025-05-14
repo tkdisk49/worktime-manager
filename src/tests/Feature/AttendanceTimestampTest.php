@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AttendanceTimestampTest extends TestCase
@@ -13,7 +12,6 @@ class AttendanceTimestampTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-
     protected Carbon $now;
 
     protected function setUp(): void

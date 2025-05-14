@@ -13,7 +13,6 @@ class AttendanceClockInTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-
     protected Carbon $now;
 
     protected function setUp(): void
@@ -29,15 +28,14 @@ class AttendanceClockInTest extends TestCase
     public function testClockInButtonWorksCorrectly()
     {
         $this->user->update(['work_status' => User::WORK_OFF_DUTY]);
+        $this->actingAs($this->user, 'web');
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200)
             ->assertSee('<button type="submit" class="attendance-create__button">出勤</button>', false);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $response = $this->followingRedirects()
             ->post(route('attendance.work_start'));
 
         $response->assertStatus(200)
@@ -47,14 +45,14 @@ class AttendanceClockInTest extends TestCase
     public function testClockInCanOnlyBePerformedOncePerDay()
     {
         $this->user->update(['work_status' => User::WORK_LEFT_WORK]);
+        $this->actingAs($this->user, 'web');
 
         Attendance::factory()->create([
             'user_id' => $this->user->id,
             'work_date' => $this->now->toDateString(),
         ]);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200)
             ->assertDontSee('<button type="submit" class="attendance-create__button">出勤</button>', false);
@@ -63,14 +61,13 @@ class AttendanceClockInTest extends TestCase
     public function testClockInTimeIsVisibleInAttendanceList()
     {
         $this->user->update(['work_status' => User::WORK_OFF_DUTY]);
+        $this->actingAs($this->user, 'web');
 
-        $this->actingAs($this->user, 'web')
-            ->post(route('attendance.work_start'));
+        $this->post(route('attendance.work_start'));
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.index', [
-                'month' => $this->now->format('Y-m')
-            ]));
+        $response = $this->get(route('attendance.index', [
+            'month' => $this->now->format('Y-m')
+        ]));
 
         $response->assertStatus(200)
             ->assertSeeText($this->now->isoFormat('MM/DD(ddd)'))

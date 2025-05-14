@@ -13,7 +13,6 @@ class AttendanceClockOutTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-
     protected Carbon $clockInTime;
     protected Carbon $clockOutTime;
 
@@ -32,6 +31,7 @@ class AttendanceClockOutTest extends TestCase
     public function testClockOutButtonWorksCorrectly()
     {
         $this->user->update(['work_status' => User::WORK_WORKING]);
+        $this->actingAs($this->user, 'web');
 
         Attendance::create([
             'user_id' => $this->user->id,
@@ -40,16 +40,14 @@ class AttendanceClockOutTest extends TestCase
             'clock_out' => null,
         ]);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->get(route('attendance.create'));
+        $response = $this->get(route('attendance.create'));
 
         $response->assertStatus(200)
             ->assertSee('<button type="submit" class="attendance-create__button">退勤</button>', false);
 
         Carbon::setTestNow($this->clockOutTime);
 
-        $response = $this->actingAs($this->user, 'web')
-            ->followingRedirects()
+        $response = $this->followingRedirects()
             ->patch(route('attendance.work_end'));
 
         $response->assertStatus(200)
@@ -59,8 +57,8 @@ class AttendanceClockOutTest extends TestCase
     public function testClockOutTimeIsVisibleInAttendanceList()
     {
         $this->user->update(['work_status' => User::WORK_OFF_DUTY]);
-
         $this->actingAs($this->user, 'web');
+
         $this->get(route('attendance.create'));
         $this->post(route('attendance.work_start'));
 

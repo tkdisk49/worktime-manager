@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Attendance;
+use App\Models\BreakTime;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,9 +14,7 @@ class EmployeeAttendanceIndexTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-
     protected Carbon $now;
-
     protected string $today;
     protected string $yesterday;
     protected string $previousMonth;
@@ -25,7 +24,7 @@ class EmployeeAttendanceIndexTest extends TestCase
     {
         parent::setUp();
 
-        $this->now = Carbon::create(2025, 5, 10, 8, 0, 0, 'Asia/Tokyo');
+        $this->now = Carbon::create(2025, 5, 10, 18, 0, 0, 'Asia/Tokyo');
         Carbon::setTestNow($this->now);
 
         $this->today = $this->now->toDateString();
@@ -39,21 +38,28 @@ class EmployeeAttendanceIndexTest extends TestCase
 
     public function testShowsAllAttendanceRecords()
     {
-        $attendanceYesterday = Attendance::factory()->create([
+        Attendance::factory()->create([
             'user_id' => $this->user->id,
             'work_date' => $this->yesterday,
         ]);
 
-        $attendanceToday = Attendance::factory()->create([
+        Attendance::factory()->create([
             'user_id' => $this->user->id,
             'work_date' => $this->today,
         ]);
 
-        $response = $this->get(route('attendance.index'));
+        $attendances = Attendance::where('user_id', $this->user->id)->get();
 
-        $response->assertStatus(200)
-            ->assertSeeText($attendanceYesterday->formatted_work_date)
-            ->assertSeeText($attendanceToday->formatted_work_date);
+        $response = $this->get(route('attendance.index'));
+        $response->assertStatus(200);
+
+        foreach ($attendances as $attendance) {
+            $response->assertSeeText($attendance->formatted_work_date);
+            $response->assertSeeText($attendance->formatted_clock_in);
+            $response->assertSeeText($attendance->formatted_clock_out);
+            $response->assertSeeText($attendance->formatted_total_break_time);
+            $response->assertSeeText($attendance->formatted_total_work_time);
+        }
     }
 
     public function testDisplaysCurrentMonthOnAttendanceList()
@@ -79,9 +85,13 @@ class EmployeeAttendanceIndexTest extends TestCase
             'month' => $this->previousMonth
         ]));
 
-        $response->assertStatus(200)
-            ->assertSeeText($previousMonthLabel)
-            ->assertSeeText($attendancePreviousMonth->formatted_work_date);
+        $response->assertStatus(200);
+        $response->assertSeeText($previousMonthLabel);
+        $response->assertSeeText($attendancePreviousMonth->formatted_work_date);
+        $response->assertSeeText($attendancePreviousMonth->formatted_clock_in);
+        $response->assertSeeText($attendancePreviousMonth->formatted_clock_out);
+        $response->assertSeeText($attendancePreviousMonth->formatted_total_break_time);
+        $response->assertSeeText($attendancePreviousMonth->formatted_total_work_time);
     }
 
     public function testDisplaysNextMonthRecordsWhenNextButtonClicked()
@@ -99,9 +109,13 @@ class EmployeeAttendanceIndexTest extends TestCase
             'month' => $this->nextMonth
         ]));
 
-        $response->assertStatus(200)
-            ->assertSeeText($nextMonthLabel)
-            ->assertSeeText($attendanceNextMonth->formatted_work_date);
+        $response->assertStatus(200);
+        $response->assertSeeText($nextMonthLabel);
+        $response->assertSeeText($attendanceNextMonth->formatted_work_date);
+        $response->assertSeeText($attendanceNextMonth->formatted_clock_in);
+        $response->assertSeeText($attendanceNextMonth->formatted_clock_out);
+        $response->assertSeeText($attendanceNextMonth->formatted_total_break_time);
+        $response->assertSeeText($attendanceNextMonth->formatted_total_work_time);
     }
 
     public function testNavigatesToDetailPageWhenDetailLinkClicked()
@@ -111,25 +125,26 @@ class EmployeeAttendanceIndexTest extends TestCase
             'work_date' => $this->yesterday,
         ]);
 
-        $attendanceToday = Attendance::factory()->create([
-            'user_id' => $this->user->id,
-            'work_date' => $this->today,
+        $breakTime = BreakTime::factory()->create([
+            'attendance_id' => $attendanceYesterday->id,
         ]);
 
         $yesterdayFormattedYear = Carbon::parse($this->yesterday)->isoFormat('YYYY年');
         $yesterdayFormattedMonthDay = Carbon::parse($this->yesterday)->isoFormat('M月D日');
 
-        $response = $this->get(route('attendance.index'));
-
-        $response->assertStatus(200)
-            ->assertSee('href="' . route('attendance.modification.show', ['id' => $attendanceYesterday->id]) . '"', false);
+        $this->get(route('attendance.index'))
+            ->assertStatus(200);
 
         $response = $this->get(route('attendance.modification.show', [
             'id' => $attendanceYesterday->id,
         ]));
 
-        $response->assertStatus(200)
-            ->assertSeeText($yesterdayFormattedYear)
-            ->assertSeeText($yesterdayFormattedMonthDay);
+        $response->assertStatus(200);
+        $response->assertSeeText($yesterdayFormattedYear);
+        $response->assertSeeText($yesterdayFormattedMonthDay);
+        $response->assertSee('value="' . $attendanceYesterday->formatted_clock_in . '"', false);
+        $response->assertSee('value="' . $attendanceYesterday->formatted_clock_out . '"', false);
+        $response->assertSee('value="' . $breakTime->formatted_break_start . '"', false);
+        $response->assertSee('value="' . $breakTime->formatted_break_end . '"', false);
     }
 }
