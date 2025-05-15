@@ -88,7 +88,7 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::post('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'store'])->name('attendance.modification.store');
 });
 
-// 管理者 一般ユーザー同一ルート
+// 管理者 一般ユーザー同一パス メソッド内にて認証ガードで分岐
 Route::middleware('auth:web,admin')->group(function () {
     Route::get('/attendance/{id}', [EmployeeAttendanceModificationController::class, 'show'])->name('attendance.modification.show');
 
