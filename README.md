@@ -90,6 +90,10 @@ php artisan migrate
 ```bash
 php artisan db:seed
 ```
+> 作成されるデータ
+> - 1名の管理者
+> - 7名の一般ユーザー
+> - ユーザーごとの2ヶ月前から昨日までの勤怠データ
 
 ## PHPUnit テスト
 
