@@ -28,8 +28,8 @@ class AttendanceModificationRequest extends FormRequest
             'new_clock_in' => 'required|date_format:H:i',
             'new_clock_out' => 'required|date_format:H:i',
             'new_remarks' => 'required|string|max:255',
-            'existing_breaks.*.start' => 'nullable|date_format:H:i',
-            'existing_breaks.*.end' => 'nullable|date_format:H:i',
+            'existing_breaks.*.start' => 'required|date_format:H:i',
+            'existing_breaks.*.end' => 'required|date_format:H:i',
             'new_break_start' => 'nullable|date_format:H:i',
             'new_break_end' => 'nullable|date_format:H:i',
         ];

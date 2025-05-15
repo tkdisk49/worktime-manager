@@ -57,7 +57,9 @@ class Attendance extends Model
 
     public function getFormattedClockOutAttribute()
     {
-        return Carbon::parse($this->clock_out)->format('H:i');
+        return $this->clock_out
+            ? Carbon::parse($this->clock_out)->format('H:i')
+            : '';
     }
 
     public function getFormattedTotalBreakTimeAttribute()

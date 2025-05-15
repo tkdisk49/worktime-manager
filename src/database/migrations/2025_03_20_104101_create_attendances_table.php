@@ -21,7 +21,7 @@ class CreateAttendancesTable extends Migration
             $table->time('clock_out')->nullable();
             $table->integer('total_work_time')->default(0)->comment('分単位の純労働時間');
             $table->integer('total_break_time')->default(0)->comment('分単位の合計休憩時間');
-            $table->text('remarks')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

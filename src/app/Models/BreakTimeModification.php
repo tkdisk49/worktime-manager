@@ -45,11 +45,15 @@ class BreakTimeModification extends Model
 
     public function getFormattedNewBreakStartAttribute()
     {
-        return Carbon::parse($this->new_break_start)->format('H:i');
+        return $this->new_break_start
+            ? Carbon::parse($this->new_break_start)->format('H:i')
+            : '';
     }
 
     public function getFormattedNewBreakEndAttribute()
     {
-        return Carbon::parse($this->new_break_end)->format('H:i');
+        return $this->new_break_end
+            ? Carbon::parse($this->new_break_end)->format('H:i')
+            : '';
     }
 }
