@@ -37,6 +37,10 @@ class EmployeeAttendanceModificationController extends Controller
             ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
             ->exists();
 
+        $hasApprovedRequest = AttendanceModification::where('attendance_id', $attendance->id)
+            ->where('approval_status', AttendanceModification::APPROVAL_APPROVED)
+            ->exists();
+
         $workDate = Carbon::parse($attendance->work_date);
         $formattedYear = $workDate->isoFormat('YYYY年');
         $formattedMonthDay = $workDate->isoFormat('M月D日');
@@ -49,6 +53,7 @@ class EmployeeAttendanceModificationController extends Controller
         return view('employee.attendances.show', compact(
             'attendance',
             'hasPendingRequest',
+            'hasApprovedRequest',
             'formattedYear',
             'formattedMonthDay',
             'formAction',
