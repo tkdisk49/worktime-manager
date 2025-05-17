@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Employee;
 use App\Http\Controllers\Admin\ApprovalController;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceModification;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EmployeeRequestController extends Controller

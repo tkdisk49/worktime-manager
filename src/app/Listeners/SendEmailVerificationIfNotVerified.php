@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class SendEmailVerificationIfNotVerified
 {
