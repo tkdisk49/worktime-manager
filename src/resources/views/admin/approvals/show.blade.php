@@ -13,8 +13,8 @@
     <div class="attendance-show">
         <h2 class="attendance-show__title">勤怠詳細</h2>
 
-        <form action="{{ route('admin.approval.update', ['attendance_correct_request' => $attendance->id]) }}" method="POST"
-            class="attendance-show__form">
+        <form action="{{ route('admin.approval.update', ['attendance_correct_request' => $attendanceModification->id]) }}"
+            method="POST" class="attendance-show__form">
             @csrf
             @method('PATCH')
             <div class="attendance-show__table-wrapper">
@@ -24,7 +24,7 @@
                         <td>
                             <div class="attendance-show__td-container">
                                 <div class="attendance-show__td-content">
-                                    <p>{{ $attendance->user->name }}</p>
+                                    <p>{{ $attendanceModification->user->name }}</p>
                                 </div>
                             </div>
                         </td>
@@ -47,15 +47,14 @@
                         <td>
                             <div class="attendance-show__td-container">
                                 <div class="attendance-show__td-content">
-                                    <p>{{ $attendance->modification->formatted_new_clock_in }}</p>
+                                    <p>{{ $attendanceModification->formatted_new_clock_in }}</p>
                                     <p>〜</p>
-                                    <p>{{ $attendance->modification->formatted_new_clock_out }}</p>
+                                    <p>{{ $attendanceModification->formatted_new_clock_out }}</p>
                                 </div>
                             </div>
                         </td>
                     </tr>
-
-                    @foreach ($attendance->breakTimeModifications as $breakTimeMod)
+                    @foreach ($attendanceModification->breakTimeModifications as $breakTimeMod)
                         <tr class="attendance-show__tr">
                             <th>
                                 @if ($loop->first)
@@ -75,13 +74,12 @@
                             </td>
                         </tr>
                     @endforeach
-
                     <tr class="attendance-show__tr">
                         <th>備考</th>
                         <td>
                             <div class="attendance-show__td-container">
                                 <div class="attendance-show__td-content">
-                                    <p>{{ $attendance->modification->new_remarks }}</p>
+                                    <p>{{ $attendanceModification->new_remarks }}</p>
                                 </div>
                             </div>
                         </td>

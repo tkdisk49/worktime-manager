@@ -28,7 +28,8 @@
                             <td class="staff-list__td">{{ $staff->name }}</td>
                             <td class="staff-list__td">{{ $staff->email }}</td>
                             <td class="staff-list__td">
-                                <a href="{{ route('admin.staff.attendance.monthly', ['id' => $staff->id]) }}" class="staff-list__detail-link">詳細</a>
+                                <a href="{{ route('admin.staff.attendance.monthly', ['id' => $staff->id]) }}"
+                                    class="staff-list__detail-link">詳細</a>
                             </td>
                         </tr>
                     @empty

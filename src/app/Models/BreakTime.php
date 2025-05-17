@@ -21,9 +21,9 @@ class BreakTime extends Model
         return $this->belongsTo(Attendance::class);
     }
 
-    public function modification()
+    public function modifications()
     {
-        return $this->hasOne(BreakTimeModification::class);
+        return $this->hasMany(BreakTimeModification::class);
     }
 
     public function getFormattedBreakStartAttribute()
@@ -33,6 +33,8 @@ class BreakTime extends Model
 
     public function getFormattedBreakEndAttribute()
     {
-        return Carbon::parse($this->break_end)->format('H:i');
+        return $this->break_end
+            ? Carbon::parse($this->break_end)->format('H:i')
+            : '';
     }
 }

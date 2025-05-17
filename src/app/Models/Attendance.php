@@ -35,14 +35,9 @@ class Attendance extends Model
         return $this->hasMany(BreakTime::class);
     }
 
-    public function modification()
+    public function modifications()
     {
-        return $this->hasOne(AttendanceModification::class);
-    }
-
-    public function breakTimeModifications()
-    {
-        return $this->hasMany(BreakTimeModification::class);
+        return $this->hasMany(AttendanceModification::class);
     }
 
     public function getFormattedWorkDateAttribute()
@@ -57,7 +52,9 @@ class Attendance extends Model
 
     public function getFormattedClockOutAttribute()
     {
-        return Carbon::parse($this->clock_out)->format('H:i');
+        return $this->clock_out
+            ? Carbon::parse($this->clock_out)->format('H:i')
+            : '';
     }
 
     public function getFormattedTotalBreakTimeAttribute()

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Attendance;
+use App\Models\AttendanceModification;
 use App\Models\BreakTime;
 use App\Models\BreakTimeModification;
 use App\Models\User;
@@ -21,7 +21,7 @@ class BreakTimeModificationFactory extends Factory
     {
         return [
             'break_time_id' => BreakTime::factory(),
-            'attendance_id' => Attendance::factory(),
+            'attendance_modification_id' => AttendanceModification::factory(),
             'user_id' => User::factory(),
             'new_break_start' => '12:00:00',
             'new_break_end' => '13:00:00',
