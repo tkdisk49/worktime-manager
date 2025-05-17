@@ -26,8 +26,6 @@ class EmployeeAttendanceModificationController extends Controller
         $attendance = Attendance::with([
             'user',
             'breakTimes',
-            'modification',
-            'breakTimeModifications',
         ])->where('user_id', $user->id)
             ->where('id', $id)
             ->firstOrFail();
@@ -36,9 +34,14 @@ class EmployeeAttendanceModificationController extends Controller
             ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
             ->exists();
 
-        $hasApprovedRequest = AttendanceModification::where('attendance_id', $attendance->id)
-            ->where('approval_status', AttendanceModification::APPROVAL_APPROVED)
-            ->exists();
+        $pendingRequest = null;
+
+        if ($hasPendingRequest) {
+            $pendingRequest = AttendanceModification::with('breakTimeModifications')
+                ->where('attendance_id', $attendance->id)
+                ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
+                ->first();
+        }
 
         $workDate = Carbon::parse($attendance->work_date);
         $formattedYear = $workDate->isoFormat('YYYY年');
@@ -52,7 +55,7 @@ class EmployeeAttendanceModificationController extends Controller
         return view('employee.attendances.show', compact(
             'attendance',
             'hasPendingRequest',
-            'hasApprovedRequest',
+            'pendingRequest',
             'formattedYear',
             'formattedMonthDay',
             'formAction',
@@ -85,7 +88,7 @@ class EmployeeAttendanceModificationController extends Controller
             $newClockOut,
             $newTotalWorkMinutes,
         ) {
-            AttendanceModification::create([
+            $attendanceModification = AttendanceModification::create([
                 'attendance_id' => $attendance->id,
                 'user_id' => $user->id,
                 'new_clock_in' => $newClockIn,
@@ -96,7 +99,7 @@ class EmployeeAttendanceModificationController extends Controller
 
             foreach ($request->input('existing_breaks', []) as $break) {
                 BreakTimeModification::create([
-                    'attendance_id' => $attendance->id,
+                    'attendance_modification_id' => $attendanceModification->id,
                     'break_time_id' => $break['id'],
                     'user_id' => $user->id,
                     'new_break_start' => $break['start'],
@@ -106,7 +109,7 @@ class EmployeeAttendanceModificationController extends Controller
 
             if ($request->filled('new_break_start') && $request->filled('new_break_end')) {
                 BreakTimeModification::create([
-                    'attendance_id' => $attendance->id,
+                    'attendance_modification_id' => $attendanceModification->id,
                     'user_id' => $user->id,
                     'new_break_start' => $request->input('new_break_start'),
                     'new_break_end' => $request->input('new_break_end'),

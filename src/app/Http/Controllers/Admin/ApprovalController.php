@@ -35,34 +35,50 @@ class ApprovalController extends Controller
 
     public function show($attendanceCorrectRequest)
     {
-        $attendance = Attendance::with([
+        // $attendance = Attendance::with([
+        //     'user',
+        //     'modification',
+        //     'breakTimeModifications'
+        // ])->findOrFail($attendanceCorrectRequest);
+
+        $attendanceModification = AttendanceModification::with([
+            'attendance',
             'user',
-            'modification',
             'breakTimeModifications'
         ])->findOrFail($attendanceCorrectRequest);
 
-        $hasPendingRequest = AttendanceModification::where('attendance_id', $attendance->id)
-            ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
-            ->exists();
+        // $hasPendingRequest = AttendanceModification::where('attendance_id', $attendance->id)
+        //     ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
+        //     ->exists();
 
-        $workDate = Carbon::parse($attendance->work_date);
+        $hasPendingRequest = $attendanceModification->approval_status === AttendanceModification::APPROVAL_PENDING;
+
+        $workDate = Carbon::parse($attendanceModification->attendance->work_date);
         $formattedYear = $workDate->isoFormat('YYYY年');
         $formattedMonthDay = $workDate->isoFormat('M月D日');
 
-        return view('admin.approvals.show', compact('attendance', 'hasPendingRequest', 'formattedYear', 'formattedMonthDay'));
+        return view('admin.approvals.show', compact('attendanceModification', 'hasPendingRequest', 'formattedYear', 'formattedMonthDay'));
     }
 
     public function update($attendanceCorrectRequest)
     {
-        $attendance = Attendance::findOrFail($attendanceCorrectRequest);
+        $attendanceModification = AttendanceModification::findOrFail($attendanceCorrectRequest);
 
-        $attendanceModification = $attendance->modification()
-            ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
-            ->firstOrFail();
+        $attendance = $attendanceModification->attendance;
 
-        $breakTimeModifications = $attendance->breakTimeModifications()
+        $breakTimeModifications = $attendanceModification->breakTimeModifications()
             ->where('approval_status', BreakTimeModification::APPROVAL_PENDING)
             ->get();
+
+        // $attendance = Attendance::findOrFail($attendanceCorrectRequest);
+
+        // $attendanceModification = $attendance->modification()
+        //     ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
+        //     ->firstOrFail();
+
+        // $breakTimeModifications = $attendance->breakTimeModifications()
+        //     ->where('approval_status', BreakTimeModification::APPROVAL_PENDING)
+        //     ->get();
 
         DB::transaction(function () use ($attendance, $attendanceModification, $breakTimeModifications) {
             $newClockIn = $attendanceModification->new_clock_in;
@@ -117,7 +133,7 @@ class ApprovalController extends Controller
         });
 
         return redirect()
-            ->route('admin.approval.show', ['attendance_correct_request' => $attendance->id])
+            ->route('admin.approval.show', ['attendance_correct_request' => $attendanceModification->id])
             ->with('success', '申請を承認しました');
     }
 }

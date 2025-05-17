@@ -34,7 +34,6 @@ class AdminAttendanceController extends Controller
             ->findOrFail($id);
 
         $hasPendingRequest = false;
-        $hasApprovedRequest = false;
 
         $workDate = Carbon::parse($attendance->work_date);
         $formattedYear = $workDate->isoFormat('YYYY年');
@@ -48,7 +47,6 @@ class AdminAttendanceController extends Controller
         return view('employee.attendances.show', compact(
             'attendance',
             'hasPendingRequest',
-            'hasApprovedRequest',
             'formattedYear',
             'formattedMonthDay',
             'formAction',
