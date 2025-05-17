@@ -38,14 +38,14 @@ class AdminAttendanceApprovalTest extends TestCase
                 'attendance_id' => $attendance->id,
             ]);
 
-            AttendanceModification::factory()->create([
+            $attendanceModification = AttendanceModification::factory()->create([
                 'attendance_id' => $attendance->id,
                 'user_id' => $user->id,
             ]);
 
             BreakTimeModification::factory()->create([
                 'break_time_id' => $breakTime->id,
-                'attendance_id' => $attendance->id,
+                'attendance_modification_id' => $attendanceModification->id,
                 'user_id' => $user->id,
             ]);
         }
@@ -75,11 +75,11 @@ class AdminAttendanceApprovalTest extends TestCase
 
     public function testShowApprovedRequests()
     {
-        $attendances = Attendance::all();
+        $attendanceModifications = AttendanceModification::all();
 
-        foreach ($attendances as $attendance) {
+        foreach ($attendanceModifications as $attendanceModification) {
             $this->patch(route('admin.approval.update', [
-                'attendance_correct_request' => $attendance->id,
+                'attendance_correct_request' => $attendanceModification->id,
             ]));
         }
 
@@ -102,42 +102,44 @@ class AdminAttendanceApprovalTest extends TestCase
 
     public function testShowRequestDetails()
     {
-        $attendance = Attendance::first();
+        $attendanceModification = AttendanceModification::first();
+        $attendance = $attendanceModification->attendance;
 
         $formattedYear = Carbon::parse($attendance->work_date)->isoFormat('YYYY年');
         $formattedMonthDay = Carbon::parse($attendance->work_date)->isoFormat('M月D日');
 
         $response = $this->get(route('admin.approval.show', [
-            'attendance_correct_request' => $attendance->id,
+            'attendance_correct_request' => $attendanceModification->id,
         ]));
 
         $response->assertStatus(200);
         $response->assertSeeText($attendance->user->name);
         $response->assertSeeText($formattedYear);
         $response->assertSeeText($formattedMonthDay);
-        $response->assertSeeText($attendance->modification->formatted_new_clock_in);
-        $response->assertSeeText($attendance->modification->formatted_new_clock_out);
+        $response->assertSeeText($attendanceModification->formatted_new_clock_in);
+        $response->assertSeeText($attendanceModification->formatted_new_clock_out);
 
-        foreach ($attendance->breakTimeModifications as $breakTimeModification) {
+        foreach ($attendanceModification->breakTimeModifications as $breakTimeModification) {
             $response->assertSeeText($breakTimeModification->formatted_new_break_start);
             $response->assertSeeText($breakTimeModification->formatted_new_break_end);
         }
 
-        $response->assertSeeText($attendance->modification->new_remarks);
+        $response->assertSeeText($attendanceModification->new_remarks);
     }
 
     public function testApproveRequest()
     {
-        $attendance = Attendance::first();
+        $attendanceModification = AttendanceModification::first();
+        $attendance = $attendanceModification->attendance;
 
         $this->patch(route('admin.approval.update', [
-            'attendance_correct_request' => $attendance->id,
+            'attendance_correct_request' => $attendanceModification->id,
         ]));
 
+        $attendanceModification->refresh();
         $attendance->refresh();
 
-        $attendanceModification = AttendanceModification::where('attendance_id', $attendance->id)->first();
-        $breakTimeModifications = BreakTimeModification::where('attendance_id', $attendance->id)->get();
+        $breakTimeModifications = $attendanceModification->breakTimeModifications;
 
         $totalBreakMinutes = 0;
         foreach ($breakTimeModifications as $breakTimeModification) {

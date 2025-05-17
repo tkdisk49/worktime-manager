@@ -34,7 +34,7 @@ class AttendanceTimestampTest extends TestCase
         $expectedDate = $this->now->isoFormat('YYYY年M月D日(ddd)');
         $expectedTime = $this->now->format('H:i');
 
-        $response->assertSee($expectedDate);
-        $response->assertSee($expectedTime);
+        $response->assertSeeText($expectedDate);
+        $response->assertSeeText($expectedTime);
     }
 }

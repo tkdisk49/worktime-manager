@@ -30,6 +30,7 @@ class AttendanceBreakTest extends TestCase
         Attendance::factory()->create([
             'user_id' => $this->user->id,
             'work_date' => $this->now->toDateString(),
+            'clock_in' => '09:00:00',
             'clock_out' => null,
             'total_work_time' => 0,
             'total_break_time' => 0,

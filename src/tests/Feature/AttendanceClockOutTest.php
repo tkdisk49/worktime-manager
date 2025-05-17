@@ -38,6 +38,8 @@ class AttendanceClockOutTest extends TestCase
             'work_date' => $this->clockInTime->toDateString(),
             'clock_in' => $this->clockInTime->format('H:i:s'),
             'clock_out' => null,
+            'total_work_time' => 0,
+            'total_break_time' => 0,
         ]);
 
         $response = $this->get(route('attendance.create'));

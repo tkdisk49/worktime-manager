@@ -78,12 +78,16 @@ class EmployeeAttendanceModificationListAndApprovalTest extends TestCase
         $this->actingAs($this->admin, 'admin');
 
         foreach ($attendances as $attendance) {
+            $modification = AttendanceModification::where('attendance_id', $attendance->id)
+                ->where('user_id', $this->user->id)
+                ->first();
+
             $this->get(route('admin.approval.show', [
-                'attendance_correct_request' => $attendance->id,
+                'attendance_correct_request' => $modification->id,
             ]));
 
             $this->patch(route('admin.approval.update', [
-                'attendance_correct_request' => $attendance->id,
+                'attendance_correct_request' => $modification->id,
             ]));
         }
 
