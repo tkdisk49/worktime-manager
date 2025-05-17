@@ -24,6 +24,11 @@ class AttendanceModification extends Model
     public const APPROVAL_PENDING = 0;
     public const APPROVAL_APPROVED = 1;
 
+    public function breakTimeModifications()
+    {
+        return $this->hasMany(BreakTimeModification::class);
+    }
+
     public function attendance()
     {
         return $this->belongsTo(Attendance::class);

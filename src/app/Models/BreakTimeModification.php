@@ -12,7 +12,7 @@ class BreakTimeModification extends Model
 
     protected $fillable = [
         'break_time_id',
-        'attendance_id',
+        'attendance_modification_id',
         'user_id',
         'new_break_start',
         'new_break_end',
@@ -28,9 +28,9 @@ class BreakTimeModification extends Model
         return $this->belongsTo(BreakTime::class);
     }
 
-    public function attendance()
+    public function attendanceModification()
     {
-        return $this->belongsTo(Attendance::class);
+        return $this->belongsTo(AttendanceModification::class);
     }
 
     public function user()

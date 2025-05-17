@@ -21,9 +21,9 @@ class BreakTime extends Model
         return $this->belongsTo(Attendance::class);
     }
 
-    public function modification()
+    public function modifications()
     {
-        return $this->hasOne(BreakTimeModification::class);
+        return $this->hasMany(BreakTimeModification::class);
     }
 
     public function getFormattedBreakStartAttribute()
