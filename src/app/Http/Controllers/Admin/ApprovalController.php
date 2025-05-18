@@ -35,21 +35,11 @@ class ApprovalController extends Controller
 
     public function show($attendanceCorrectRequest)
     {
-        // $attendance = Attendance::with([
-        //     'user',
-        //     'modification',
-        //     'breakTimeModifications'
-        // ])->findOrFail($attendanceCorrectRequest);
-
         $attendanceModification = AttendanceModification::with([
             'attendance',
             'user',
             'breakTimeModifications'
         ])->findOrFail($attendanceCorrectRequest);
-
-        // $hasPendingRequest = AttendanceModification::where('attendance_id', $attendance->id)
-        //     ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
-        //     ->exists();
 
         $hasPendingRequest = $attendanceModification->approval_status === AttendanceModification::APPROVAL_PENDING;
 
@@ -69,16 +59,6 @@ class ApprovalController extends Controller
         $breakTimeModifications = $attendanceModification->breakTimeModifications()
             ->where('approval_status', BreakTimeModification::APPROVAL_PENDING)
             ->get();
-
-        // $attendance = Attendance::findOrFail($attendanceCorrectRequest);
-
-        // $attendanceModification = $attendance->modification()
-        //     ->where('approval_status', AttendanceModification::APPROVAL_PENDING)
-        //     ->firstOrFail();
-
-        // $breakTimeModifications = $attendance->breakTimeModifications()
-        //     ->where('approval_status', BreakTimeModification::APPROVAL_PENDING)
-        //     ->get();
 
         DB::transaction(function () use ($attendance, $attendanceModification, $breakTimeModifications) {
             $newClockIn = $attendanceModification->new_clock_in;
